@@ -27,3 +27,15 @@ def company_list(request):
             companies = companies.filter(country__icontains=country)
     
     return render(request, 'corp/company_list.html', {'companies': companies, 'form': form})
+
+from rest_framework import viewsets
+from .models import Company
+from .serializers import CompanySerializer
+from .filters import CompanyFilter
+from django_filters.rest_framework import DjangoFilterBackend
+
+class CompanyViewSet(viewsets.ModelViewSet):
+    queryset = Company.objects.all()
+    serializer_class = CompanySerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = CompanyFilter

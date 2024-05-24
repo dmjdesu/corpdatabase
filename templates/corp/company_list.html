@@ -1,60 +1,17 @@
-{% extends 'base.html' %}
-
-{% block title %}Company List{% endblock %}
-
-{% block content %}
-<h1 class="mb-4">Company List</h1>
-
-<form method="GET" action="{% url 'company_list' %}" class="form-inline mb-4">
-    <div class="form-group mr-2">
-        <label for="id_name" class="mr-2">{{ form.name.label }}</label>
-        {{ form.name }}
-    </div>
-    <div class="form-group mr-2">
-        <label for="id_industry_category" class="mr-2">{{ form.industry_category.label }}</label>
-        {{ form.industry_category }}
-    </div>
-    <div class="form-group mr-2">
-        <label for="id_industry" class="mr-2">{{ form.industry.label }}</label>
-        {{ form.industry }}
-    </div>
-    <div class="form-group mr-2">
-        <label for="id_city" class="mr-2">{{ form.city.label }}</label>
-        {{ form.city }}
-    </div>
-    <div class="form-group mr-2">
-        <label for="id_country" class="mr-2">{{ form.country.label }}</label>
-        {{ form.country }}
-    </div>
-    <button type="submit" class="btn btn-outline-success">Search</button>
-</form>
-
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th scope="col">#</th>
-            <th scope="col">Company Name</th>
-            <th scope="col">Industry</th>
-            <th scope="col">Established Date</th>
-            <th scope="col">Employees</th>
-            <th scope="col">Revenue</th>
-            <th scope="col">City</th>
-            <th scope="col">Country</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for company in companies %}
-        <tr>
-            <th scope="row">{{ forloop.counter }}</th>
-            <td>{{ company.name }}</td>
-            <td>{{ company.industry.name }}</td>
-            <td>{{ company.established_date }}</td>
-            <td>{{ company.employees }}</td>
-            <td>{{ company.revenue }}</td>
-            <td>{{ company.city }}</td>
-            <td>{{ company.country }}</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
-{% endblock %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>My React App</title>
+    {% load static %}
+    <!-- CSS -->
+    <link href="{% static 'css/main.e6c13ad2.css' %}" rel="stylesheet">
+</head>
+<body>
+    <div id="root"></div>
+    <!-- JS -->
+    <script src="{% static 'js/453.cff89a1e.chunk.js' %}"></script>
+    <script src="{% static 'js/main.eb2ba30e.js' %}"></script>
+</body>
+</html>
