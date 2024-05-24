@@ -26,7 +26,7 @@ SECRET_KEY = "django-insecure-vls#70j394lywg7^9knh2sn=1tmv#aj5!rrig12i2bdmw*3l6g
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["ik1-202-74761.vs.sakura.ne.jp","www.ik1-202-74761.vs.sakura.ne.jp","127.0.0.1"]
 
 
 # Application definition
@@ -119,7 +119,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = "static/"
-
+STATIC_ROOT = '/usr/share/nginx/html/static/'
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
