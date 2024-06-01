@@ -9,4 +9,5 @@ router.register(r'companies', CompanyViewSet)
 urlpatterns = [
     path('company', views.company_list, name='company_list'),
     path('api/', include(router.urls)),
+    path('email/', views.email_view, name='email_view'),
 ]

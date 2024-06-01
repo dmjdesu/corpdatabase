@@ -39,3 +39,47 @@ class CompanyViewSet(viewsets.ModelViewSet):
     serializer_class = CompanySerializer
     filter_backends = [DjangoFilterBackend]
     filterset_class = CompanyFilter
+
+# 企業を保存するたびにインデックスを更新するシグナルを設定します。
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+
+
+from django.shortcuts import get_object_or_404
+from .documents import CompanyDocument
+
+def index_company(company_id):
+    company = get_object_or_404(Company, id=company_id)
+    company_document = CompanyDocument(
+        meta={'id': company.id},
+        name=company.name,
+        description=company.description,
+        industry=company.industry.name
+    )
+    company_document.save()
+
+@receiver(post_save, sender=Company)
+def index_company_on_save(sender, instance, **kwargs):
+    index_company(instance.id)
+
+from django.core.mail import send_mail
+from django.shortcuts import render
+from .forms import EmailForm
+
+def email_view(request):
+    if request.method == 'POST':
+        form = EmailForm(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data['email']
+            send_mail(
+                '件名',  # 件名
+                'メールの本文',  # メッセージ
+                'mbiclife0@gmail.com',  # 送信元のメールアドレス
+                [email],  # 送信先のメールアドレスのリスト
+                fail_silently=False,
+            )
+    else:
+        form = EmailForm()
+    
+    return render(request, 'emailapp/email.html', {'form': form})
+

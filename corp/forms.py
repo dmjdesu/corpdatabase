@@ -13,3 +13,7 @@ class CompanySearchForm(forms.Form):
     )
     city = forms.CharField(label='市区町村', required=False)
     country = forms.CharField(label='国', required=False)
+
+class EmailForm(forms.Form):
+    email = forms.EmailField(label='Your email')
+
