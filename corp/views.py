@@ -61,25 +61,3 @@ def index_company(company_id):
 @receiver(post_save, sender=Company)
 def index_company_on_save(sender, instance, **kwargs):
     index_company(instance.id)
-
-from django.core.mail import send_mail
-from django.shortcuts import render
-from .forms import EmailForm
-
-def email_view(request):
-    if request.method == 'POST':
-        form = EmailForm(request.POST)
-        if form.is_valid():
-            email = form.cleaned_data['email']
-            send_mail(
-                '件名',  # 件名
-                'メールの本文',  # メッセージ
-                'mbiclife0@gmail.com',  # 送信元のメールアドレス
-                [email],  # 送信先のメールアドレスのリスト
-                fail_silently=False,
-            )
-    else:
-        form = EmailForm()
-    
-    return render(request, 'emailapp/email.html', {'form': form})
-
