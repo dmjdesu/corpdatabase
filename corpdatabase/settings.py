@@ -26,7 +26,7 @@ SECRET_KEY = "django-insecure-vls#70j394lywg7^9knh2sn=1tmv#aj5!rrig12i2bdmw*3l6g
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["ik1-202-74761.vs.sakura.ne.jp","www.ik1-202-74761.vs.sakura.ne.jp","127.0.0.1"]
+ALLOWED_HOSTS = ["salesdb.jp","www.salesdb.jp","127.0.0.1","54.199.121.65"]
 
 
 # Application definition
@@ -125,7 +125,7 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / "static"]
 
 # 必要に応じて以下も追加
-STATIC_ROOT = '/usr/share/nginx/html/static/'
+STATIC_ROOT = '/var/www/vhosts/salesdb.jp/httpdocs/static/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
