@@ -118,11 +118,16 @@ USE_I18N = True
 USE_TZ = True
 
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/4.2/howto/static-files/
+# settings.py
 
-STATIC_URL = '/static/'
-STATICFILES_DIRS = [BASE_DIR / "static"]
+# STATIC_ROOT は静的ファイルが収集されるディレクトリです
+STATIC_ROOT = '/var/www/vhosts/salesdb.jp/httpdocs/static/'
+
+# STATICFILES_DIRS は開発中に静的ファイルを探すディレクトリのリストです
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static_files'),  # 例えば、プロジェクトディレクトリ内のstatic_filesフォルダ
+    # 他のディレクトリがあればここに追加
+]
 
 # 必要に応じて以下も追加
 STATIC_ROOT = '/var/www/vhosts/salesdb.jp/httpdocs/static/'
