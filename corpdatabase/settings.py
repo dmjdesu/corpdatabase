@@ -120,8 +120,8 @@ USE_TZ = True
 
 # settings.py
 
-# STATIC_ROOT は静的ファイルが収集されるディレクトリです
-STATIC_ROOT = '/var/www/vhosts/salesdb.jp/httpdocs/static/'
+# 静的ファイルのURL
+STATIC_URL = '/static/'
 
 # STATICFILES_DIRS は開発中に静的ファイルを探すディレクトリのリストです
 STATICFILES_DIRS = [
