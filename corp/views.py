@@ -28,6 +28,9 @@ def company_list(request):
     
     return render(request, 'corp/company_list.html', {'companies': companies, 'form': form})
 
+def top(request):
+    return render(request, 'corp/top.html', {})
+
 from rest_framework import viewsets
 from .models import Company
 from .serializers import CompanySerializer

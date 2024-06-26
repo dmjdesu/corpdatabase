@@ -1,0 +1,1160 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>営業リスト無料作成サイト | SalesDB（セールスデービー）</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="icon" href="https://salessystem.co.jp/wpcms/wp-content/uploads/2024/06/favicon-1.png" type="image/png">
+    <style>
+        body {
+            background-image: url('https://salessystem.co.jp/wpcms/wp-content/uploads/2024/06/pixta_75413139_M.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .header {
+            background-color: white;
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: absolute;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .header img {
+            width: 150px;
+        }
+
+        .header nav a {
+            color: #10b981;
+            margin-left: 20px;
+            text-decoration: none;
+            font-weight: bold;
+            position: relative;
+        }
+
+        .header nav a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 3px;
+            background-color: #10b981;
+            bottom: -5px;
+            left: 0;
+            transition: width 0.3s ease-in-out;
+        }
+
+        .header nav a:hover::after {
+            width: 100%;
+        }
+
+        .header .button {
+            border: 2px solid #10b981;
+            border-radius: 5px;
+            padding: 5px 10px;
+            text-decoration: none;
+            color: #10b981;
+            font-weight: bold;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header .button:hover {
+            background-color: #10b981;
+            color: white;
+            text-decoration: none;
+        }
+
+        .overlay {
+            background-color: rgba(0, 128, 128, 0.7);
+            position: relative;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            padding-top: 80px;
+            padding-bottom: 80px;
+            flex: 1;
+            transition: padding 0.3s ease-in-out;
+        }
+
+        .overlay.expanded {
+            padding-top: 180px;
+        }
+
+        .logo {
+            width: 350px;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+
+        .headline {
+            color: white;
+            font-size: 2.5rem;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .search-results {
+            background-color: rgba(255, 255, 255, 0.7);
+            padding: 20px;
+            margin-bottom: 40px;
+            width: 80%;
+            max-width: 1000px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+
+        .search-results .search-count {
+            font-size: 1rem;
+            color: #808080;
+            font-weight: bold;
+        }
+
+        .search-results .search-count span {
+            font-size: 2rem;
+            color: #10b981;
+            margin-right: 5px;
+        }
+
+        .hexagon {
+            position: absolute;
+            top: 0;
+            left: 0;
+            transform: translate(-50%, -50%);
+            width: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hexagon img {
+            width: 100%;
+            height: auto;
+        }
+
+        .search-box {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 10px;
+            width: 80%;
+            max-width: 1000px;
+            border-radius: 5px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .search-box input[type="text"] {
+            padding: 15px;
+            font-size: 1rem;
+            border: none;
+            outline: none;
+            flex-grow: 1;
+            cursor: pointer;
+        }
+
+        .search-box button {
+            padding: 15px 30px;
+            font-size: 1rem;
+            border: none;
+            background-color: #10b981;
+            color: white;
+            cursor: pointer;
+            outline: none;
+            flex-shrink: 0;
+        }
+
+        .toggle-link {
+            color: white;
+            cursor: pointer;
+            font-size: 1rem;
+            text-decoration: underline;
+            margin-bottom: 20px;
+        }
+
+        .details {
+            display: none;
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 30px;
+            border-radius: 10px;
+            width: 80%;
+            max-width: 1000px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 40px;
+            font-family: 'Helvetica Neue', sans-serif;
+            position: relative; /* ポップアップが重ならないように */
+        }
+
+        .details h3 {
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #333;
+            border-bottom: 2px solid #10b981;
+            padding-bottom: 5px;
+            position: relative;
+        }
+
+        .details h3 .clear-button {
+            position: absolute;
+            right: 0;
+            top: 0;
+            background-color: #ccc;
+            color: white;
+            padding: 2px 10px;
+            border: none;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .details h3 .clear-button:hover {
+            background-color: #bbb;
+        }
+
+        .details h3 .clear-button i {
+            margin-left: 5px;
+            font-size: 0.9rem;
+        }
+
+        .details div {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            flex-wrap: nowrap;
+        }
+
+        .details label {
+            margin-right: 10px;
+            font-size: 0.9rem;
+        }
+
+        .details input[type="checkbox"] {
+            margin-right: 10px;
+            width: 20px;
+            height: 20px;
+        }
+
+        .details input[type="text"],
+        .details textarea {
+            padding: 10px;
+            font-size: 0.9rem;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            outline: none;
+            flex-grow: 1;
+        }
+
+        .details input[type="text"]:focus,
+        .details textarea:focus {
+            border-color: #10b981;
+            box-shadow: 0 0 5px rgba(16, 185, 129, 0.5);
+        }
+
+        .details .row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            flex-wrap: nowrap;
+        }
+
+        .details .row label {
+            width: 20%;
+            text-align: right;
+            padding-right: 10px;
+        }
+
+        .details .row input,
+        .details .row textarea {
+            width: calc(30% - 10px);
+            margin-right: 10px;
+        }
+
+        .details .row span {
+            margin-left: 10px;
+            font-size: 0.9rem;
+            color: #333;
+        }
+
+        .tags {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 20px;
+            width: 80%;
+            max-width: 1000px;
+            margin-bottom: 10px;
+        }
+
+        .tag {
+            background-color: rgba(255, 255, 255, 0.7);
+            color: #0f6654;
+            padding: 8px 12px;
+            border-radius: 20px;
+            margin: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 0.875rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .tag:hover {
+            background-color: #10b981;
+            color: white;
+        }
+
+        .more-tags {
+            display: block;
+            width: 80%;
+            max-width: 1000px;
+            text-align: right;
+            color: white;
+            text-decoration: underline;
+            margin-top: 10px;
+            font-size: 1rem;
+            font-weight: normal;
+        }
+
+        .more-tags:hover {
+            color: #d1d5db;
+        }
+
+        .more-tags i {
+            font-style: normal;
+        }
+
+        .cta-button {
+            width: 100%;
+            text-align: center;
+            background-color: #10b981;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: bold;
+            padding: 20px 0;
+            text-decoration: none;
+            display: block;
+        }
+
+        .cta-button:hover {
+            background-color: #0f9967;
+        }
+
+        .header nav .button::after {
+            display: none;
+        }
+
+        /* 連絡先等のチェックボックスと文字のサイズ調整 */
+        .details .contacts {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: flex-start;
+            gap: 15px;
+        }
+
+        .details .contacts div {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .details .contacts label {
+            font-size: 1rem;
+        }
+
+        /* 説明文のスタイル */
+        .details .note {
+            font-size: 0.9rem;
+            color: #333;
+            text-align: right;
+            margin-top: 10px;
+            width: 100%;
+            font-family: 'Helvetica Neue', sans-serif;
+        }
+
+        /* ポップアップのスタイル */
+        .popup {
+            position: fixed;
+            top: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+            max-width: 800px;
+            background-color: white;
+            border: 1px solid #ccc;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: none; /* ポップアップをデフォルトで非表示 */
+            z-index: 2000;
+            padding: 20px;
+            border-radius: 0;
+            overflow: auto; /* ポップアップ内のスクロールを有効にする */
+            max-height: 80vh; /* ポップアップの最大高さを指定 */
+        }
+
+        .popup.active {
+            display: block; /* .activeクラスが付いた時に表示 */
+        }
+
+        .popup-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #10b981;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .popup-header h2 {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #333;
+            margin-right: 20px; /* タイトルと検索結果の間に余白を追加 */
+        }
+
+        .popup-header .search-count-popup {
+            font-size: 0.9rem;
+            color: #808080;
+            font-weight: bold;
+            white-space: nowrap; /* 改行を防ぐ */
+        }
+
+        .popup-header .search-count-popup span {
+            font-size: 1.5rem;
+            color: #10b981;
+            margin-right: 5px;
+        }
+
+        .popup-header button {
+            background-color: transparent;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #333;
+        }
+
+        .tabs {
+            display: flex;
+            border-bottom: 2px solid #ddd;
+            margin-bottom: 10px;
+        }
+
+        .tab {
+            padding: 10px;
+            cursor: pointer;
+            flex: 1;
+            text-align: center;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-bottom: none;
+            transition: background-color 0.3s;
+        }
+
+        .tab:hover {
+            background-color: #f0f0f0;
+        }
+
+        .tab.active {
+            background-color: white;
+            font-weight: bold;
+            border-bottom: 1px solid white;
+        }
+
+        .industry-popup-content {
+            display: none;
+        }
+
+        .industry-popup-content.active {
+            display: block; /* 修正: ポップアップコンテンツをブロック表示に変更 */
+        }
+
+        .industry-popup-content .column {
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 10px;
+            margin-bottom: 10px; /* 修正: カラム間にマージンを追加 */
+        }
+
+        .industry-popup-content .column h3 {
+            font-size: 1rem;
+            font-weight: bold;
+            border-bottom: 1px solid #ccc;
+            margin-bottom: 10px;
+        }
+
+        .industry-popup-content .column ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .industry-popup-content .column ul li {
+            padding: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            display: flex;
+            align-items: center;
+        }
+
+        .industry-popup-content .column ul li.selected {
+            background-color: #10b981;
+            color: white;
+        }
+
+        .industry-popup-content .column ul li input[type="checkbox"] {
+            margin-right: 10px;
+            width: 20px;
+            height: 20px;
+        }
+
+        .industry-popup-content .column ul li label {
+            flex-grow: 1; /* ラベルを伸ばしてリストを中央揃え */
+        }
+
+        .popup-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .popup-buttons button {
+            padding: 10px 20px;
+            border: none;
+            background-color: #10b981;
+            color: white;
+            cursor: pointer;
+            font-size: 1rem;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .popup-buttons button:hover {
+            background-color: #0f9967;
+        }
+
+        .classification-title {
+            text-align: center;
+            font-size: 1rem;
+            font-weight: normal;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .popup-overlay.active,
+        .popup.active {
+            display: block;
+        }
+
+        .region-group {
+            font-weight: bold;
+            cursor: pointer;
+            margin: 5px 0;
+        }
+
+        .region-group ul {
+            margin-left: 20px;
+            list-style-type: none;
+            padding-left: 0;
+            display: none; /* デフォルトで非表示 */
+        }
+
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none; /* デフォルトで非表示 */
+            z-index: 1000;
+        }
+
+        .popup-overlay.active {
+            display: block; /* .activeクラスが付いた時に表示 */
+        }
+
+        .region-popup-content {
+            display: none;
+        }
+
+        .region-popup-content.active {
+            display: block; /* .activeクラスが付いた時に表示 */
+        }
+
+        /* 検索結果表示用のスタイル */
+        .search-count-popup {
+            font-size: 0.9rem;
+            color: #808080;
+            font-weight: bold;
+            white-space: nowrap; /* 改行を防ぐ */
+        }
+
+        .search-count-popup span {
+            font-size: 1.5rem;
+            color: #10b981;
+            margin-right: 5px;
+        }
+
+        /* 「この条件で検索」ボタン */
+        .search-cta-button {
+            width: 100%;
+            text-align: center;
+            background-color: #10b981;
+            color: white;
+            font-size: 1rem;
+            font-weight: bold;
+            padding: 15px 0;
+            text-decoration: none;
+            display: block;
+            margin-top: 20px;
+            border-radius: 5px;
+        }
+
+        .search-cta-button:hover {
+            background-color: #0f9967;
+        }
+
+    </style>
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    <header class="header">
+        <img src="https://salessystem.co.jp/wpcms/wp-content/uploads/2024/06/SalesDB_logo_by-1.png" alt="SalesDB ロゴ">
+        <nav>
+            <a href="#">SalesDBとは？</a>
+            <a href="#">業種から探す</a>
+            <a href="#">地域から探す</a>
+            <a href="#">企業規模から探す</a>
+            <a href="#">#タグから探す</a>
+            <a href="#" class="button">無料会員登録</a>
+            <a href="#" class="button">会員ログイン</a>
+        </nav>
+    </header>
+    <div class="overlay" id="overlay">
+        <h1 class="headline">登録データ数が業界最多の800万件以上<br>国内最大級の企業/店舗/施設データベース</h1>
+        <div class="logo-container">
+            <img src="https://salessystem.co.jp/wpcms/wp-content/uploads/2024/05/SalesDB_モノトーン_logo_by表記あり_白抜き.png" alt="SalesDB ロゴ" class="logo">
+        </div>
+        <div class="search-results">
+            <div class="hexagon">
+                <img src="https://salessystem.co.jp/wpcms/wp-content/uploads/2024/06/mark.png" alt="月300件まで無料ダウンロード">
+            </div>
+            <div class="search-count">検索結果 <span>8,320,452</span>件</div>
+        </div>
+        <div class="search-box">
+            <input type="text" placeholder="業種" id="industryInput" onclick="showPopup('industry', event)">
+            <input type="text" placeholder="地域" id="regionInput" onclick="showPopup('region', event)">
+            <input type="text" placeholder="フリーワード">
+            <button>検索</button>
+        </div>
+        <div class="toggle-link" onclick="toggleDetails()">詳細検索 <span>&#9660;</span></div>
+        <div class="details">
+            <h3>
+                キーワード
+                <button class="clear-button" onclick="clearInputs('keyword')">クリア <i class="fas fa-chevron-down"></i></button>
+            </h3>
+            <div class="row">
+                <label for="excludeKeywords">除外するキーワード</label>
+                <textarea id="excludeKeywords" rows="2" placeholder="複数行入力欄"></textarea>
+                <label for="tags">#タグを選択</label>
+                <textarea id="tags" rows="2" placeholder="複数行入力欄 選択"></textarea>
+            </div>
+
+            <h3>
+                業績
+                <button class="clear-button" onclick="clearInputs('performance')">クリア <i class="fas fa-chevron-down"></i></button>
+            </h3>
+            <div class="row">
+                <label for="revenueMin">売上高(年商)</label>
+                <input type="text" id="revenueMin">
+                <span>円 ～</span>
+                <input type="text" id="revenueMax">
+                <span>円</span>
+            </div>
+            <div class="row">
+                <label for="profitMin">経常利益</label>
+                <input type="text" id="profitMin">
+                <span>円 ～</span>
+                <input type="text" id="profitMax">
+                <span>円</span>
+            </div>
+
+            <h3>
+                規模
+                <button class="clear-button" onclick="clearInputs('scale')">クリア <i class="fas fa-chevron-down"></i></button>
+            </h3>
+            <div class="row">
+                <label for="capitalMin">資本金</label>
+                <input type="text" id="capitalMin">
+                <span>円 ～</span>
+                <input type="text" id="capitalMax">
+                <span>円</span>
+            </div>
+            <div class="row">
+                <label for="establishedYearMin">設立年</label>
+                <input type="text" id="establishedYearMin">
+                <span>年 ～</span>
+                <input type="text" id="establishedYearMax">
+                <span>年</span>
+            </div>
+            <div class="row">
+                <label for="employeesMin">従業員数</label>
+                <input type="text" id="employeesMin">
+                <span>人 ～</span>
+                <input type="text" id="employeesMax">
+                <span>人</span>
+            </div>
+            <div class="row">
+                <label for="branchesMin">事業所数</label>
+                <input type="text" id="branchesMin">
+                <span>拠点 ～</span>
+                <input type="text" id="branchesMax">
+                <span>拠点</span>
+            </div>
+            <div class="row">
+                <label for="storesMin">店舗数</label>
+                <input type="text" id="storesMin">
+                <span>店舗 ～</span>
+                <input type="text" id="storesMax">
+                <span>店舗</span>
+            </div>
+            <div class="row">
+                <label for="factoriesMin">工場数</label>
+                <input type="text" id="factoriesMin">
+                <span>箇所 ～</span>
+                <input type="text" id="factoriesMax">
+                <span>箇所</span>
+            </div>
+
+            <h3>
+                業態
+                <button class="clear-button" onclick="clearInputs('businessType')">クリア <i class="fas fa-chevron-down"></i></button>
+            </h3>
+            <div>
+                <input type="checkbox" id="btob">
+                <label for="btob">BtoB</label>
+                <input type="checkbox" id="btoc">
+                <label for="btoc">BtoC</label>
+                <input type="checkbox" id="ctoc">
+                <label for="ctoc">CtoC</label>
+            </div>
+            <p class="note">※業種指定よりも、こちらの指定が優先されます</p>
+
+            <h3>
+                連絡先等
+                <button class="clear-button" onclick="clearInputs('contacts')">クリア <i class="fas fa-chevron-down"></i></button>
+            </h3>
+            <div class="contacts">
+                <div>
+                    <input type="checkbox" id="summary">
+                    <label for="summary">企業概要が必須</label>
+                </div>
+                <div>
+                    <input type="checkbox" id="corporateNumber">
+                    <label for="corporateNumber">法人番号が必須</label>
+                </div>
+                <div>
+                    <input type="checkbox" id="representativeName">
+                    <label for="representativeName">代表者名が必須</label>
+                </div>
+                <div>
+                    <input type="checkbox" id="phoneNumber">
+                    <label for="phoneNumber">電話番号が必須</label>
+                </div>
+                <div>
+                    <input type="checkbox" id="faxNumber">
+                    <label for="faxNumber">FAX番号が必須</label>
+                </div>
+                <div>
+                    <input type="checkbox" id="websiteUrl">
+                    <label for="websiteUrl">サイトURLが必須</label>
+                </div>
+                <div>
+                    <input type="checkbox" id="contactUrl">
+                    <label for="contactUrl">お問い合わせURLが必須</label>
+                </div>
+                <div>
+                    <input type="checkbox" id="emailAddress">
+                    <label for="emailAddress">メールアドレスが必須</label>
+                </div>
+            </div>
+
+            <p class="note">※団体名/所在地は100％付与されています。</p>
+
+            <!-- 「この条件で検索」ボタンを追加 -->
+            <a href="#" class="search-cta-button">この条件で検索</a>
+        </div>
+        <div class="tags">
+            <a href="#" class="tag">#店舗</a>
+            <a href="#" class="tag">#株式会社のみ</a>
+            <a href="#" class="tag">#設立3年以内の企業</a>
+            <a href="#" class="tag">#官公庁</a>
+            <a href="#" class="tag">#営業お断りをしている企業</a>
+            <a href="#" class="tag">#中途採用と新卒採用の両方を行っている企業</a>
+        </div>
+        <a href="#" class="more-tags">その他のタグから探す <i>&gt;</i></a>
+    </div>
+    <a href="#" class="cta-button">今すぐフリープランに登録する <i>&gt;</i></a>
+
+    <!-- ポップアップのためのコンテンツ -->
+    <div class="popup-overlay" id="popupOverlay" onclick="closeAllPopups()"></div>
+
+    <div id="industryPopup" class="popup">
+        <div class="popup-header">
+            <h2>業種を選択</h2>
+            <div class="search-count-popup">検索結果 <span>12,345</span>件</div>
+            <button onclick="closePopup('industry')"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="tabs">
+            <div class="tab active" data-tab="simple">簡易版で選択<br />(オリジナル分類)</div>
+            <div class="tab" data-tab="detailed">詳細版で選択<br />(日本標準産業分類)</div>
+        </div>
+        <div class="industry-popup-content simple active">
+            <div class="column">
+                <h3>大分類</h3>
+                <ul id="simpleLarge">
+                    <li><input type="checkbox" value="製造業"> 製造業</li>
+                    <li><input type="checkbox" value="IT・通信"> IT・通信</li>
+                    <!-- 他の大分類を追加 -->
+                </ul>
+            </div>
+            <div class="column">
+                <h3>中分類</h3>
+                <ul id="simpleMedium">
+                    <!-- 中分類の選択肢 -->
+                    <!-- 大分類の選択に応じて表示 -->
+                </ul>
+            </div>
+        </div>
+        <div class="industry-popup-content detailed">
+            <div class="column">
+                <h3>大分類</h3>
+                <ul id="detailedLarge">
+                    <li><input type="checkbox" value="製造業"> 製造業</li>
+                    <li><input type="checkbox" value="IT・通信"> IT・通信</li>
+                    <!-- 他の大分類を追加 -->
+                </ul>
+            </div>
+            <div class="column">
+                <h3>中分類</h3>
+                <ul id="detailedMedium">
+                    <!-- 中分類の選択肢 -->
+                    <!-- 大分類の選択に応じて表示 -->
+                </ul>
+            </div>
+            <div class="column">
+                <h3>小分類</h3>
+                <ul id="detailedSmall">
+                    <!-- 小分類の選択肢 -->
+                    <!-- 中分類の選択に応じて表示 -->
+                </ul>
+            </div>
+            <div class="column">
+                <h3>細分類</h3>
+                <ul id="detailedDetailed">
+                    <!-- 細分類の選択肢 -->
+                    <!-- 小分類の選択に応じて表示 -->
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div id="regionPopup" class="popup">
+        <div class="popup-header">
+            <h2>地域を選択</h2>
+            <div class="search-count-popup">検索結果 <span>12,345</span>件</div>
+            <button onclick="closePopup('region')"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="region-popup-content active">
+            <div id="regionList">
+                <div class="region-group">
+                    <input type="checkbox" id="regionHokkaido" onchange="toggleRegionGroup('hokkaido', this)">
+                    <label for="regionHokkaido" onclick="toggleSubRegions('hokkaido')">北海道</label>
+                    <ul id="hokkaido">
+                        <li><input type="checkbox" value="北海道"> 北海道</li>
+                    </ul>
+                </div>
+                <div class="region-group">
+                    <input type="checkbox" id="regionTohoku" onchange="toggleRegionGroup('tohoku', this)">
+                    <label for="regionTohoku" onclick="toggleSubRegions('tohoku')">東北</label>
+                    <ul id="tohoku">
+                        <li><input type="checkbox" value="青森県"> 青森県</li>
+                        <li><input type="checkbox" value="岩手県"> 岩手県</li>
+                        <li><input type="checkbox" value="宮城県"> 宮城県</li>
+                        <li><input type="checkbox" value="秋田県"> 秋田県</li>
+                        <li><input type="checkbox" value="山形県"> 山形県</li>
+                        <li><input type="checkbox" value="福島県"> 福島県</li>
+                    </ul>
+                </div>
+                <div class="region-group">
+                    <input type="checkbox" id="regionKanto" onchange="toggleRegionGroup('kanto', this)">
+                    <label for="regionKanto" onclick="toggleSubRegions('kanto')">関東</label>
+                    <ul id="kanto">
+                        <li><input type="checkbox" value="茨城県"> 茨城県</li>
+                        <li><input type="checkbox" value="栃木県"> 栃木県</li>
+                        <li><input type="checkbox" value="群馬県"> 群馬県</li>
+                        <li><input type="checkbox" value="埼玉県"> 埼玉県</li>
+                        <li><input type="checkbox" value="千葉県"> 千葉県</li>
+                        <li><input type="checkbox" value="東京都"> 東京都</li>
+                        <li><input type="checkbox" value="神奈川県"> 神奈川県</li>
+                    </ul>
+                </div>
+                <div class="region-group">
+                    <input type="checkbox" id="regionChubu" onchange="toggleRegionGroup('chubu', this)">
+                    <label for="regionChubu" onclick="toggleSubRegions('chubu')">中部</label>
+                    <ul id="chubu">
+                        <li><input type="checkbox" value="新潟県"> 新潟県</li>
+                        <li><input type="checkbox" value="富山県"> 富山県</li>
+                        <li><input type="checkbox" value="石川県"> 石川県</li>
+                        <li><input type="checkbox" value="福井県"> 福井県</li>
+                        <li><input type="checkbox" value="山梨県"> 山梨県</li>
+                        <li><input type="checkbox" value="長野県"> 長野県</li>
+                        <li><input type="checkbox" value="岐阜県"> 岐阜県</li>
+                        <li><input type="checkbox" value="静岡県"> 静岡県</li>
+                        <li><input type="checkbox" value="愛知県"> 愛知県</li>
+                    </ul>
+                </div>
+                <div class="region-group">
+                    <input type="checkbox" id="regionKinki" onchange="toggleRegionGroup('kinki', this)">
+                    <label for="regionKinki" onclick="toggleSubRegions('kinki')">近畿</label>
+                    <ul id="kinki">
+                        <li><input type="checkbox" value="三重県"> 三重県</li>
+                        <li><input type="checkbox" value="滋賀県"> 滋賀県</li>
+                        <li><input type="checkbox" value="京都府"> 京都府</li>
+                        <li><input type="checkbox" value="大阪府"> 大阪府</li>
+                        <li><input type="checkbox" value="兵庫県"> 兵庫県</li>
+                        <li><input type="checkbox" value="奈良県"> 奈良県</li>
+                        <li><input type="checkbox" value="和歌山県"> 和歌山県</li>
+                    </ul>
+                </div>
+                <div class="region-group">
+                    <input type="checkbox" id="regionChugoku" onchange="toggleRegionGroup('chugoku', this)">
+                    <label for="regionChugoku" onclick="toggleSubRegions('chugoku')">中国</label>
+                    <ul id="chugoku">
+                        <li><input type="checkbox" value="鳥取県"> 鳥取県</li>
+                        <li><input type="checkbox" value="島根県"> 島根県</li>
+                        <li><input type="checkbox" value="岡山県"> 岡山県</li>
+                        <li><input type="checkbox" value="広島県"> 広島県</li>
+                        <li><input type="checkbox" value="山口県"> 山口県</li>
+                    </ul>
+                </div>
+                <div class="region-group">
+                    <input type="checkbox" id="regionShikoku" onchange="toggleRegionGroup('shikoku', this)">
+                    <label for="regionShikoku" onclick="toggleSubRegions('shikoku')">四国</label>
+                    <ul id="shikoku">
+                        <li><input type="checkbox" value="徳島県"> 徳島県</li>
+                        <li><input type="checkbox" value="香川県"> 香川県</li>
+                        <li><input type="checkbox" value="愛媛県"> 愛媛県</li>
+                        <li><input type="checkbox" value="高知県"> 高知県</li>
+                    </ul>
+                </div>
+                <div class="region-group">
+                    <input type="checkbox" id="regionKyushu" onchange="toggleRegionGroup('kyushu', this)">
+                    <label for="regionKyushu" onclick="toggleSubRegions('kyushu')">九州・沖縄</label>
+                    <ul id="kyushu">
+                        <li><input type="checkbox" value="福岡県"> 福岡県</li>
+                        <li><input type="checkbox" value="佐賀県"> 佐賀県</li>
+                        <li><input type="checkbox" value="長崎県"> 長崎県</li>
+                        <li><input type="checkbox" value="熊本県"> 熊本県</li>
+                        <li><input type="checkbox" value="大分県"> 大分県</li>
+                        <li><input type="checkbox" value="宮崎県"> 宮崎県</li>
+                        <li><input type="checkbox" value="鹿児島県"> 鹿児島県</li>
+                        <li><input type="checkbox" value="沖縄県"> 沖縄県</li>
+                    </ul>
+                </div>
+                <div class="popup-buttons">
+                    <button onclick="confirmRegion()">決定する</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleDetails() {
+            const details = document.querySelector('.details');
+            const overlay = document.getElementById('overlay');
+            if (details.style.display === 'none' || details.style.display === '') {
+                details.style.display = 'block';
+                overlay.classList.add('expanded');
+            } else {
+                details.style.display = 'none';
+                overlay.classList.remove('expanded');
+            }
+        }
+
+        function clearInputs(section) {
+            if (section === 'keyword') {
+                document.getElementById('excludeKeywords').value = '';
+                document.getElementById('tags').value = '';
+            } else if (section === 'performance') {
+                document.getElementById('revenueMin').value = '';
+                document.getElementById('revenueMax').value = '';
+                document.getElementById('profitMin').value = '';
+                document.getElementById('profitMax').value = '';
+            } else if (section === 'scale') {
+                document.getElementById('capitalMin').value = '';
+                document.getElementById('capitalMax').value = '';
+                document.getElementById('establishedYearMin').value = '';
+                document.getElementById('establishedYearMax').value = '';
+                document.getElementById('employeesMin').value = '';
+                document.getElementById('employeesMax').value = '';
+                document.getElementById('branchesMin').value = '';
+                document.getElementById('branchesMax').value = '';
+                document.getElementById('storesMin').value = '';
+                document.getElementById('storesMax').value = '';
+                document.getElementById('factoriesMin').value = '';
+                document.getElementById('factoriesMax').value = '';
+            } else if (section === 'businessType') {
+                document.getElementById('btob').checked = false;
+                document.getElementById('btoc').checked = false;
+                document.getElementById('ctoc').checked = false;
+            } else if (section === 'contacts') {
+                document.getElementById('summary').checked = false;
+                document.getElementById('corporateNumber').checked = false;
+                document.getElementById('representativeName').checked = false;
+                document.getElementById('phoneNumber').checked = false;
+                document.getElementById('faxNumber').checked = false;
+                document.getElementById('websiteUrl').checked = false;
+                document.getElementById('contactUrl').checked = false;
+                document.getElementById('emailAddress').checked = false;
+            }
+        }
+
+        function showPopup(type, event) {
+            closeAllPopups(); // 他のポップアップを閉じる
+            document.getElementById('popupOverlay').classList.add('active');
+            document.body.classList.add('popup-open');
+
+            if (type === 'industry') {
+                document.getElementById('industryPopup').classList.add('active');
+                document.querySelector('.industry-popup-content.simple').classList.add('active');
+                document.querySelector('.industry-popup-content.detailed').classList.remove('active');
+            } else if (type === 'region') {
+                document.getElementById('regionPopup').classList.add('active');
+                document.querySelector('.region-popup-content').classList.add('active');
+            }
+
+            // イベントの伝播を停止して、バブリングを防ぐ
+            event.stopPropagation();
+        }
+
+        function closePopup(type) {
+            if (type === 'industry') {
+                document.getElementById('industryPopup').classList.remove('active');
+                document.querySelector('.industry-popup-content.simple').classList.remove('active');
+                document.querySelector('.industry-popup-content.detailed').classList.remove('active');
+            } else if (type === 'region') {
+                document.getElementById('regionPopup').classList.remove('active');
+                document.querySelector('.region-popup-content').classList.remove('active');
+            }
+            document.getElementById('popupOverlay').classList.remove('active');
+            document.body.classList.remove('popup-open');
+        }
+
+        function closeAllPopups() {
+            document.getElementById('popupOverlay').classList.remove('active');
+            document.body.classList.remove('popup-open');
+
+            document.getElementById('industryPopup').classList.remove('active');
+            document.getElementById('regionPopup').classList.remove('active');
+            document.querySelectorAll('.region-popup-content').forEach(content => content.classList.remove('active'));
+            document.querySelectorAll('.industry-popup-content').forEach(content => content.classList.remove('active'));
+        }
+
+        // ポップアップ外のクリックでポップアップを閉じる
+        document.addEventListener('click', function(event) {
+            const industryPopup = document.getElementById('industryPopup');
+            const regionPopup = document.getElementById('regionPopup');
+            const popupOverlay = document.getElementById('popupOverlay');
+            
+            // ポップアップまたはオーバーレイ外のクリックをチェック
+            if (!industryPopup.contains(event.target) && !regionPopup.contains(event.target) && event.target.id === 'popupOverlay') {
+                closeAllPopups();
+            }
+        });
+
+        // ポップアップ内のクリックでイベント伝播を防ぐ
+        document.getElementById('industryPopup').addEventListener('click', function(event) {
+            event.stopPropagation();
+        });
+
+        document.getElementById('regionPopup').addEventListener('click', function(event) {
+            event.stopPropagation();
+        });
+
+        // 地域グループのチェック切り替え
+        function toggleRegionGroup(groupId, checkbox) {
+            const regionGroup = document.getElementById(groupId);
+            const checkboxes = regionGroup.querySelectorAll('input[type="checkbox"]');
+            checkboxes.forEach(cb => cb.checked = checkbox.checked);
+        }
+
+        // 地域グループのサブリストを表示/非表示にする
+        function toggleSubRegions(groupId) {
+            const regionGroup = document.getElementById(groupId);
+            const subRegions = regionGroup.querySelectorAll('ul');
+
+            subRegions.forEach(ul => {
+                ul.style.display = ul.style.display === 'none' || ul.style.display === '' ? 'block' : 'none';
+            });
+        }
+
+        function confirmRegion() {
+            const regionInput = document.getElementById('regionInput');
+            const selectedRegions = Array.from(document.querySelectorAll('#regionPopup input[type="checkbox"]:checked'))
+                .map(checkbox => checkbox.value);
+
+            regionInput.value = selectedRegions.join(', ');
+            closeAllPopups(); // ポップアップを閉じる
+        }
+
+        // ページの初期化
+        function initialize() {
+            // 初期化時に必要なリスナー設定
+            document.getElementById('popupOverlay').addEventListener('click', (event) => {
+                // ポップアップ外のクリックで閉じる
+                if (event.target.id === 'popupOverlay') {
+                    closeAllPopups();
+                }
+            });
+
+            // タブの切り替え
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.addEventListener('click', function () {
+                    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                    document.querySelectorAll('.industry-popup-content').forEach(c => c.classList.remove('active'));
+                    document.querySelectorAll('.region-popup-content').forEach(c => c.classList.remove('active'));
+
+                    this.classList.add('active');
+                    document.querySelector('.' + this.getAttribute('data-tab')).classList.add('active');
+                });
+            });
+        }
+
+        // ページロード時に初期化を呼び出す
+        document.addEventListener('DOMContentLoaded', initialize);
+    </script>
+</body>
+</html>
