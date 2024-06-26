@@ -27,7 +27,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            position: absolute;
+            position: fixed;
             width: 100%;
             top: 0;
             z-index: 1000;
@@ -38,12 +38,22 @@
             width: 150px;
         }
 
+        .header nav {
+            display: flex;
+            align-items: center;
+            margin-left: auto; /* ナビゲーションメニューを右詰めにする */
+        }
+
         .header nav a {
             color: #10b981;
             margin-left: 20px;
             text-decoration: none;
             font-weight: bold;
             position: relative;
+        }
+
+        .header nav a:last-child {
+            margin-right: 20px; /* 最後のリンクに右マージンを追加 */
         }
 
         .header nav a::after {
@@ -78,6 +88,15 @@
             text-decoration: none;
         }
 
+        .menu-toggle {
+            display: none;
+            cursor: pointer;
+            font-size: 1.8rem;
+            color: #10b981;
+            position: absolute;
+            left: 10px; /* 左端に配置 */
+        }
+
         .overlay {
             background-color: rgba(0, 128, 128, 0.7);
             position: relative;
@@ -86,14 +105,14 @@
             justify-content: center;
             align-items: center;
             flex-direction: column;
-            padding-top: 80px;
+            padding-top: 160px;
             padding-bottom: 80px;
             flex: 1;
             transition: padding 0.3s ease-in-out;
         }
 
         .overlay.expanded {
-            padding-top: 180px;
+            padding-top: 260px;
         }
 
         .logo {
@@ -104,10 +123,11 @@
 
         .headline {
             color: white;
-            font-size: 2.5rem;
+            font-size: 2.3rem;
             font-weight: bold;
             text-align: center;
             margin-bottom: 20px;
+            line-height: 1.4;
         }
 
         .search-results {
@@ -164,10 +184,17 @@
         .search-box input[type="text"] {
             padding: 15px;
             font-size: 1rem;
-            border: none;
+            border: 1px solid #ddd;
             outline: none;
             flex-grow: 1;
             cursor: pointer;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .search-box input[type="text"]:hover,
+        .search-box input[type="text"]:focus {
+            border-color: #10b981;
+            box-shadow: 0 0 5px rgba(16, 185, 129, 0.5);
         }
 
         .search-box button {
@@ -179,6 +206,7 @@
             cursor: pointer;
             outline: none;
             flex-shrink: 0;
+            flex-grow: 0;
         }
 
         .toggle-link {
@@ -186,6 +214,7 @@
             cursor: pointer;
             font-size: 1rem;
             text-decoration: underline;
+            margin-top: 10px;
             margin-bottom: 20px;
         }
 
@@ -199,7 +228,7 @@
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             margin-bottom: 40px;
             font-family: 'Helvetica Neue', sans-serif;
-            position: relative; /* ポップアップが重ならないように */
+            position: relative;
         }
 
         .details h3 {
@@ -270,6 +299,20 @@
         .details textarea:focus {
             border-color: #10b981;
             box-shadow: 0 0 5px rgba(16, 185, 129, 0.5);
+        }
+
+        .details input[type="text"] {
+            -moz-appearance: textfield;
+        }
+
+        .details input[type="text"]::-webkit-outer-spin-button,
+        .details input[type="text"]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        .details input[type="text"].numeric-only {
+            text-align: right;
         }
 
         .details .row {
@@ -399,20 +442,20 @@
             left: 50%;
             transform: translateX(-50%);
             width: 80%;
-            max-width: 800px;
+            max-width: 1000px;
             background-color: white;
             border: 1px solid #ccc;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            display: none; /* ポップアップをデフォルトで非表示 */
+            display: none;
             z-index: 2000;
             padding: 20px;
-            border-radius: 0;
-            overflow: auto; /* ポップアップ内のスクロールを有効にする */
-            max-height: 80vh; /* ポップアップの最大高さを指定 */
+            border-radius: 10px;
+            overflow: auto;
+            max-height: 80vh;
         }
 
         .popup.active {
-            display: block; /* .activeクラスが付いた時に表示 */
+            display: block;
         }
 
         .popup-header {
@@ -429,20 +472,17 @@
             font-size: 1.2rem;
             font-weight: bold;
             color: #333;
-            margin-right: 20px; /* タイトルと検索結果の間に余白を追加 */
+            margin-right: 20px;
+            flex: 1;
         }
 
         .popup-header .search-count-popup {
             font-size: 0.9rem;
             color: #808080;
             font-weight: bold;
-            white-space: nowrap; /* 改行を防ぐ */
-        }
-
-        .popup-header .search-count-popup span {
-            font-size: 1.5rem;
-            color: #10b981;
-            margin-right: 5px;
+            white-space: nowrap;
+            flex: 1;
+            text-align: center;
         }
 
         .popup-header button {
@@ -451,12 +491,15 @@
             font-size: 1.5rem;
             cursor: pointer;
             color: #333;
+            margin-left: auto;
         }
 
         .tabs {
             display: flex;
             border-bottom: 2px solid #ddd;
             margin-bottom: 10px;
+            border-radius: 10px;
+            overflow: hidden;
         }
 
         .tab {
@@ -467,7 +510,7 @@
             background-color: #f9f9f9;
             border: 1px solid #ddd;
             border-bottom: none;
-            transition: background-color 0.3s;
+            transition: background-color 0.3s, border-color 0.3s;
         }
 
         .tab:hover {
@@ -475,61 +518,94 @@
         }
 
         .tab.active {
-            background-color: white;
+            background-color: #10b981;
+            color: white;
             font-weight: bold;
             border-bottom: 1px solid white;
         }
 
-        .industry-popup-content {
+        .industry-popup-content,
+        .region-popup-content,
+        .tag-popup-content {
             display: none;
         }
 
-        .industry-popup-content.active {
-            display: block; /* 修正: ポップアップコンテンツをブロック表示に変更 */
+        .industry-popup-content.active,
+        .region-popup-content.active,
+        .tag-popup-content.active {
+            display: block;
         }
 
-        .industry-popup-content .column {
+        .industry-popup-content .columns,
+        .tag-popup-content .columns {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .industry-popup-content .column,
+        .tag-popup-content .column {
+            flex: 1;
+            max-height: 400px;
+            overflow-y: auto;
             background-color: #f9f9f9;
             border: 1px solid #ddd;
             border-radius: 5px;
             padding: 10px;
-            margin-bottom: 10px; /* 修正: カラム間にマージンを追加 */
+            min-width: 45%;
+            margin-top: 10px;
         }
 
-        .industry-popup-content .column h3 {
+        .industry-popup-content .column h3,
+        .tag-popup-content .column h3 {
             font-size: 1rem;
             font-weight: bold;
-            border-bottom: 1px solid #ccc;
             margin-bottom: 10px;
         }
 
-        .industry-popup-content .column ul {
+        .industry-popup-content .column ul,
+        .tag-popup-content .column ul {
             list-style: none;
             padding: 0;
             margin: 0;
         }
 
-        .industry-popup-content .column ul li {
-            padding: 5px;
+        .industry-popup-content .column ul li,
+        .tag-popup-content .column ul li {
+            padding: 10px;
             cursor: pointer;
-            transition: background-color 0.3s;
             display: flex;
+            justify-content: space-between;
             align-items: center;
         }
 
-        .industry-popup-content .column ul li.selected {
+        .industry-popup-content .column ul li.selected,
+        .tag-popup-content .column ul li.selected {
             background-color: #10b981;
             color: white;
         }
 
-        .industry-popup-content .column ul li input[type="checkbox"] {
+        .industry-popup-content .column ul li input[type="checkbox"],
+        .tag-popup-content .column ul li input[type="checkbox"] {
             margin-right: 10px;
             width: 20px;
             height: 20px;
         }
 
-        .industry-popup-content .column ul li label {
-            flex-grow: 1; /* ラベルを伸ばしてリストを中央揃え */
+        .industry-popup-content .column ul li label,
+        .tag-popup-content .column ul li label {
+            flex-grow: 1;
+        }
+
+        .industry-popup-content .column ul li .count-box,
+        .tag-popup-content .column ul li .count-box {
+            background-color: #e0e0e0;
+            border-radius: 5px;
+            padding: 5px 10px;
+            font-size: 0.8rem;
+            color: #333;
+            display: inline-block;
         }
 
         .popup-buttons {
@@ -571,13 +647,89 @@
             font-weight: bold;
             cursor: pointer;
             margin: 5px 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
         }
 
-        .region-group ul {
-            margin-left: 20px;
-            list-style-type: none;
-            padding-left: 0;
-            display: none; /* デフォルトで非表示 */
+        .region-group input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+        }
+
+        .region-group .count-box {
+            background-color: #f0f0f0;
+            border-radius: 5px;
+            padding: 5px 10px;
+            font-size: 0.8rem;
+            color: #555;
+            margin-left: 10px;
+            display: inline-block;
+        }
+
+        .region-popup-content {
+            display: none;
+        }
+
+        .region-popup-content.active {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .region-popup-content .column {
+            flex: 1;
+            max-height: 400px;
+            overflow-y: auto;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 10px;
+        }
+
+        .region-popup-content .column h3 {
+            font-size: 1rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .region-popup-content .column ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .region-popup-content .column ul li {
+            padding: 10px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .region-popup-content .column ul li.selected {
+            background-color: #10b981;
+            color: white;
+        }
+
+        .region-popup-content .column ul li input[type="checkbox"] {
+            margin-right: 10px;
+            width: 20px;
+            height: 20px;
+        }
+
+        .region-popup-content .column ul li label {
+            flex-grow: 1;
+        }
+
+        .region-popup-content .column ul li .count-box {
+            background-color: #e0e0e0;
+            border-radius: 5px;
+            padding: 5px 10px;
+            font-size: 0.8rem;
+            color: #333;
+            display: inline-block;
         }
 
         .popup-overlay {
@@ -587,20 +739,12 @@
             width: 100%;
             height: 100%;
             background-color: rgba(0, 0, 0, 0.5);
-            display: none; /* デフォルトで非表示 */
+            display: none;
             z-index: 1000;
         }
 
         .popup-overlay.active {
-            display: block; /* .activeクラスが付いた時に表示 */
-        }
-
-        .region-popup-content {
-            display: none;
-        }
-
-        .region-popup-content.active {
-            display: block; /* .activeクラスが付いた時に表示 */
+            display: block;
         }
 
         /* 検索結果表示用のスタイル */
@@ -608,7 +752,8 @@
             font-size: 0.9rem;
             color: #808080;
             font-weight: bold;
-            white-space: nowrap; /* 改行を防ぐ */
+            white-space: nowrap;
+            margin-right: 20px;
         }
 
         .search-count-popup span {
@@ -636,21 +781,210 @@
             background-color: #0f9967;
         }
 
+        /* キーワードで探す フォームのスタイル */
+        .keyword-search {
+            display: block;
+            margin: 15px 0;
+            padding: 10px;
+            font-size: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            outline: none;
+            flex-grow: 1;
+            width: 100%;
+            box-sizing: border-box;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .keyword-search:focus,
+        .keyword-search:hover {
+            border-color: #10b981;
+            box-shadow: 0 0 5px rgba(16, 185, 129, 0.5);
+        }
+
+        /* ポップアップ内のキーワード検索フォームのスタイル変更 */
+        #regionKeyword:focus,
+        #regionKeyword:hover,
+        #detailedIndustryKeyword:focus,
+        #detailedIndustryKeyword:hover,
+        #tagKeyword:focus,
+        #tagKeyword:hover {
+            border-color: #10b981;
+            box-shadow: 0 0 5px rgba(16, 185, 129, 0.5);
+        }
+
+        /* ここからレスポンシブ対応 */
+        @media (max-width: 768px) {
+            .header nav {
+                display: none; /* ナビゲーションメニューを隠す */
+            }
+
+            .menu-toggle {
+                display: block; /* スマホ用サイズでは表示する */
+            }
+
+            .header {
+                justify-content: space-between; /* ヘッダーのアイテムを両端に配置 */
+            }
+
+            .header .button-container {
+                position: absolute;
+                right: 10px;
+                top: 50%;
+                transform: translateY(-50%);
+                display: flex;
+                gap: 5px; /* ボタンの間のスペース */
+            }
+
+            .header .button {
+                font-size: 0.8rem; /* スマホサイズでのボタンの文字サイズを小さく */
+                padding: 5px 8px; /* ボタンのパディングを調整 */
+            }
+
+            .overlay {
+                padding-top: 100px; /* 修正: スマホサイズでのオーバーレイのパディング */
+                padding-bottom: 40px;
+            }
+
+            .headline {
+                font-size: 1.5rem;
+                padding: 0 10px;
+                word-wrap: break-word;
+            }
+
+            .search-box {
+                flex-wrap: wrap;
+            }
+
+            .search-box input[type="text"] {
+                flex: 1 1 100%;
+                min-width: auto;
+            }
+
+            .search-box button {
+                flex: 1 1 100%;
+                min-width: auto;
+                padding: 10px;
+                box-sizing: border-box;
+            }
+
+            .search-results {
+                width: 80%;
+                margin-bottom: 20px;
+                padding: 10px;
+            }
+
+            .details {
+                width: 90%; /* スマホサイズでのポップアップに余白を追加 */
+                margin: 0 auto; /* 中央揃え */
+            }
+
+            /* 検索結果の背景リサイズ */
+            .search-results {
+                background-size: contain;
+            }
+
+            /* ロゴを中央に配置 */
+            .header img {
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            /* ドロップダウンメニューのスタイル */
+            .dropdown {
+                display: none;
+                flex-direction: column;
+                background-color: white;
+                position: absolute;
+                top: 50px; /* 修正: ヘッダーの下に表示 */
+                left: 0;
+                width: 200px;
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                z-index: 1000; /* ヘッダーの上に表示 */
+            }
+
+            .dropdown.active {
+                display: flex;
+            }
+
+            .dropdown a {
+                padding: 10px;
+                text-align: center;
+                color: #10b981;
+                text-decoration: none;
+                border-bottom: 1px solid #ddd;
+            }
+
+            .dropdown a:hover {
+                background-color: #f0f0f0;
+            }
+        }/* ここまでレスポンシブ対応 */
+
+        /* パソコンサイズでのフッターのテキスト表示を非表示にする */
+        @media (min-width: 769px) {
+            .dropdown {
+                display: none;
+            }
+
+        /* ヘッダーのメニューの文字サイズを調整 */
+        @media (min-width: 768px) and (max-width: 944px) {
+            .header nav a {
+                font-size: 0.7rem; /* メニューの文字サイズを小さくする */
+                margin-left: 10px; /* マージンを調整して改行を防ぐ */
+                margin-right: 10px; /* 左右にマージンを均等に設定 */
+                right: 200px;　/* ボタンの位置を考慮 */
+            }
+
+            .header .button-container {
+                position: absolute;/* 会員ログインなどのボタンを小さく */
+                font-size: 0.8rem; /* メニューの文字サイズを小さくする */
+                right: 10px;
+                top: 50%;
+                transform: translateY(-50%);
+                display: flex;
+                gap: 5px; /* ボタンの間のスペース */
+            }
+
+            .search-box {
+                flex-wrap: wrap;/* 検索ボックスの形を変更 */
+            }
+
+            .search-box input[type="text"] {
+                flex: 1 1 100%;
+                min-width: auto;
+            }
+
+            .search-box button {
+                flex: 1 1 100%;
+                min-width: auto;
+                padding: 10px;
+                box-sizing: border-box;
+            }
+
+            .header nav {
+                flex-wrap: nowrap; /* メニューが改行されないようにする */
+            }
+        }
     </style>
-    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
     <header class="header">
         <img src="https://salessystem.co.jp/wpcms/wp-content/uploads/2024/06/SalesDB_logo_by-1.png" alt="SalesDB ロゴ">
+        <div class="menu-toggle" onclick="toggleMenu()">
+            <i class="fa-solid fa-bars"></i> <!-- Font Awesomeのハンバーガーメニューアイコン -->
+        </div>
         <nav>
             <a href="#">SalesDBとは？</a>
             <a href="#">業種から探す</a>
             <a href="#">地域から探す</a>
-            <a href="#">企業規模から探す</a>
             <a href="#">#タグから探す</a>
+        </nav>
+        <div class="button-container">
             <a href="#" class="button">無料会員登録</a>
             <a href="#" class="button">会員ログイン</a>
-        </nav>
+        </div>
     </header>
     <div class="overlay" id="overlay">
         <h1 class="headline">登録データ数が業界最多の800万件以上<br>国内最大級の企業/店舗/施設データベース</h1>
@@ -671,88 +1005,88 @@
         </div>
         <div class="toggle-link" onclick="toggleDetails()">詳細検索 <span>&#9660;</span></div>
         <div class="details">
-            <h3>
+            <h3 class="keyword-section">
                 キーワード
-                <button class="clear-button" onclick="clearInputs('keyword')">クリア <i class="fas fa-chevron-down"></i></button>
+                <button class="clear-button" onclick="clearInputs('keyword-section')">クリア <i class="fas fa-chevron-down"></i></button>
             </h3>
-            <div class="row">
+            <div class="keyword-section row">
                 <label for="excludeKeywords">除外するキーワード</label>
                 <textarea id="excludeKeywords" rows="2" placeholder="複数行入力欄"></textarea>
                 <label for="tags">#タグを選択</label>
-                <textarea id="tags" rows="2" placeholder="複数行入力欄 選択"></textarea>
+                <input type="text" id="tags" onclick="showPopup('tag', event)" readonly>
             </div>
-
-            <h3>
+            <!-- 他の詳細検索項目 -->
+            <h3 class="performance-section">
                 業績
-                <button class="clear-button" onclick="clearInputs('performance')">クリア <i class="fas fa-chevron-down"></i></button>
+                <button class="clear-button" onclick="clearInputs('performance-section')">クリア <i class="fas fa-chevron-down"></i></button>
             </h3>
-            <div class="row">
+            <div class="performance-section row">
                 <label for="revenueMin">売上高(年商)</label>
-                <input type="text" id="revenueMin">
+                <input type="text" id="revenueMin" class="numeric-only" oninput="formatNumber(this)">
                 <span>円 ～</span>
-                <input type="text" id="revenueMax">
+                <input type="text" id="revenueMax" class="numeric-only" oninput="formatNumber(this)">
                 <span>円</span>
             </div>
-            <div class="row">
+            <div class="performance-section row">
                 <label for="profitMin">経常利益</label>
-                <input type="text" id="profitMin">
+                <input type="text" id="profitMin" class="numeric-only" oninput="formatNumber(this)">
                 <span>円 ～</span>
-                <input type="text" id="profitMax">
+                <input type="text" id="profitMax" class="numeric-only" oninput="formatNumber(this)">
                 <span>円</span>
             </div>
 
-            <h3>
+            <h3 class="scale-section">
                 規模
-                <button class="clear-button" onclick="clearInputs('scale')">クリア <i class="fas fa-chevron-down"></i></button>
+                <button class="clear-button" onclick="clearInputs('scale-section')">クリア <i class="fas fa-chevron-down"></i></button>
             </h3>
-            <div class="row">
+            <div class="scale-section row">
                 <label for="capitalMin">資本金</label>
-                <input type="text" id="capitalMin">
+                <input type="text" id="capitalMin" class="numeric-only" oninput="formatNumber(this)">
                 <span>円 ～</span>
-                <input type="text" id="capitalMax">
+                <input type="text" id="capitalMax" class="numeric-only" oninput="formatNumber(this)">
                 <span>円</span>
             </div>
-            <div class="row">
+            <div class="scale-section row">
                 <label for="establishedYearMin">設立年</label>
-                <input type="text" id="establishedYearMin">
+                <input type="text" id="establishedYearMin" class="numeric-only" maxlength="4" oninput="formatNumber(this)">
                 <span>年 ～</span>
-                <input type="text" id="establishedYearMax">
+                <input type="text" id="establishedYearMax" class="numeric-only" maxlength="4" oninput="formatNumber(this)">
                 <span>年</span>
             </div>
-            <div class="row">
+            <div class="scale-section row">
                 <label for="employeesMin">従業員数</label>
-                <input type="text" id="employeesMin">
+                <input type="text" id="employeesMin" class="numeric-only" oninput="formatNumber(this)">
                 <span>人 ～</span>
-                <input type="text" id="employeesMax">
+                <input type="text" id="employeesMax" class="numeric-only" oninput="formatNumber(this)">
                 <span>人</span>
             </div>
-            <div class="row">
+            <div class="scale-section row">
                 <label for="branchesMin">事業所数</label>
-                <input type="text" id="branchesMin">
+                <input type="text" id="branchesMin" class="numeric-only" oninput="formatNumber(this)">
                 <span>拠点 ～</span>
-                <input type="text" id="branchesMax">
+                <input type="text" id="branchesMax" class="numeric-only" oninput="formatNumber(this)">
                 <span>拠点</span>
             </div>
-            <div class="row">
+            <div class="scale-section row">
                 <label for="storesMin">店舗数</label>
-                <input type="text" id="storesMin">
+                <input type="text" id="storesMin" class="numeric-only" oninput="formatNumber(this)">
                 <span>店舗 ～</span>
-                <input type="text" id="storesMax">
+                <input type="text" id="storesMax" class="numeric-only" oninput="formatNumber(this)">
                 <span>店舗</span>
             </div>
-            <div class="row">
+            <div class="scale-section row">
                 <label for="factoriesMin">工場数</label>
-                <input type="text" id="factoriesMin">
+                <input type="text" id="factoriesMin" class="numeric-only" oninput="formatNumber(this)">
                 <span>箇所 ～</span>
-                <input type="text" id="factoriesMax">
+                <input type="text" id="factoriesMax" class="numeric-only" oninput="formatNumber(this)">
                 <span>箇所</span>
             </div>
 
-            <h3>
+            <h3 class="businessType-section">
                 業態
-                <button class="clear-button" onclick="clearInputs('businessType')">クリア <i class="fas fa-chevron-down"></i></button>
+                <button class="clear-button" onclick="clearInputs('businessType-section')">クリア <i class="fas fa-chevron-down"></i></button>
             </h3>
-            <div>
+            <div class="businessType-section">
                 <input type="checkbox" id="btob">
                 <label for="btob">BtoB</label>
                 <input type="checkbox" id="btoc">
@@ -763,13 +1097,13 @@
             <p class="note">※業種指定よりも、こちらの指定が優先されます</p>
 
             <h3>
-                連絡先等
+                連絡先
                 <button class="clear-button" onclick="clearInputs('contacts')">クリア <i class="fas fa-chevron-down"></i></button>
             </h3>
             <div class="contacts">
                 <div>
                     <input type="checkbox" id="summary">
-                    <label for="summary">企業概要が必須</label>
+                    <label for="summary">概要説明が必須</label>
                 </div>
                 <div>
                     <input type="checkbox" id="corporateNumber">
@@ -799,11 +1133,22 @@
                     <input type="checkbox" id="emailAddress">
                     <label for="emailAddress">メールアドレスが必須</label>
                 </div>
+                <div>
+                    <input type="checkbox" id="xUrl">
+                    <label for="xUrl">X(旧:Twitter)のURLが必須</label>
+                </div>
+                <div>
+                    <input type="checkbox" id="facebookUrl">
+                    <label for="facebookUrl">FacebookのURLが必須</label>
+                </div>
+                <div>
+                    <input type="checkbox" id="instagramUrl">
+                    <label for="instagramUrl">InstagramのURLが必須</label>
+                </div>
             </div>
 
             <p class="note">※団体名/所在地は100％付与されています。</p>
 
-            <!-- 「この条件で検索」ボタンを追加 -->
             <a href="#" class="search-cta-button">この条件で検索</a>
         </div>
         <div class="tags">
@@ -818,343 +1163,548 @@
     </div>
     <a href="#" class="cta-button">今すぐフリープランに登録する <i>&gt;</i></a>
 
+    <!-- ドロップダウンメニュー -->
+    <div class="dropdown" id="dropdownMenu">
+        <a href="#">SalesDBとは？</a>
+        <a href="#">業種から探す</a>
+        <a href="#">地域から探す</a>
+        <a href="#">#タグから探す</a>
+    </div>
+
     <!-- ポップアップのためのコンテンツ -->
     <div class="popup-overlay" id="popupOverlay" onclick="closeAllPopups()"></div>
 
+    <!-- 業種のポップアップ -->
     <div id="industryPopup" class="popup">
         <div class="popup-header">
             <h2>業種を選択</h2>
             <div class="search-count-popup">検索結果 <span>12,345</span>件</div>
-            <button onclick="closePopup('industry')"><i class="fas fa-times"></i></button>
+            <button onclick="closePopup('industry')">&times;</button>
         </div>
         <div class="tabs">
-            <div class="tab active" data-tab="simple">簡易版で選択<br />(オリジナル分類)</div>
-            <div class="tab" data-tab="detailed">詳細版で選択<br />(日本標準産業分類)</div>
+            <div class="tab active" data-tab="simple" onclick="switchTab('industry', 'simple')">簡易版で選択（オリジナル業種分類）</div>
+            <div class="tab" data-tab="detailed" onclick="switchTab('industry', 'detailed')">詳細版で選択（日本標準産業分類）</div>
         </div>
-        <div class="industry-popup-content simple active">
-            <div class="column">
-                <h3>大分類</h3>
-                <ul id="simpleLarge">
-                    <li><input type="checkbox" value="製造業"> 製造業</li>
-                    <li><input type="checkbox" value="IT・通信"> IT・通信</li>
-                    <!-- 他の大分類を追加 -->
-                </ul>
-            </div>
-            <div class="column">
-                <h3>中分類</h3>
-                <ul id="simpleMedium">
-                    <!-- 中分類の選択肢 -->
-                    <!-- 大分類の選択に応じて表示 -->
-                </ul>
+        <div class="industry-popup-content active" id="industrySimple">
+            <input type="text" placeholder="キーワードで探す" id="simpleIndustryKeyword" class="keyword-search" onkeyup="searchKeyword('simple', this.value)">
+            <div class="columns">
+                <div class="column">
+                    <h3>大分類</h3>
+                    <ul id="simpleCategories">
+                        <li><input type="checkbox" id="simpleCategory1" onchange="toggleSimpleCategory('simpleCategory1')"> <label for="simpleCategory1">製造業</label> <span class="count-box">1,234</span></li>
+                        <li><input type="checkbox" id="simpleCategory2" onchange="toggleSimpleCategory('simpleCategory2')"> <label for="simpleCategory2">小売業</label> <span class="count-box">567</span></li>
+                        <li><input type="checkbox" id="simpleCategory3" onchange="toggleSimpleCategory('simpleCategory3')"> <label for="simpleCategory3">サービス業</label> <span class="count-box">890</span></li>
+                    </ul>
+                </div>
+                <div class="column">
+                    <h3>中分類</h3>
+                    <ul id="simpleSubcategories">
+                    </ul>
+                </div>
             </div>
         </div>
-        <div class="industry-popup-content detailed">
-            <div class="column">
-                <h3>大分類</h3>
-                <ul id="detailedLarge">
-                    <li><input type="checkbox" value="製造業"> 製造業</li>
-                    <li><input type="checkbox" value="IT・通信"> IT・通信</li>
-                    <!-- 他の大分類を追加 -->
-                </ul>
+        <div class="industry-popup-content" id="industryDetailed">
+            <input type="text" placeholder="キーワードで探す" id="detailedIndustryKeyword" class="keyword-search" onkeyup="searchKeyword('detailed', this.value)">
+            <div class="columns">
+                <div class="column">
+                    <h3>大分類</h3>
+                    <ul id="detailedCategories">
+                        <li><input type="checkbox" id="detailedCategory1" onchange="toggleDetailedCategory('detailedCategory1')"> <label for="detailedCategory1">A.農業、林業</label> <span class="count-box">1,234</span></li>
+                        <li><input type="checkbox" id="detailedCategory2" onchange="toggleDetailedCategory('detailedCategory2')"> <label for="detailedCategory2">B.漁業</label> <span class="count-box">567</span></li>
+                        <li><input type="checkbox" id="detailedCategory3" onchange="toggleDetailedCategory('detailedCategory3')"> <label for="detailedCategory3">C.鉱業、採石業、砂利採取業</label> <span class="count-box">890</span></li>
+                    </ul>
+                </div>
+                <div class="column">
+                    <h3>中分類</h3>
+                    <ul id="detailedSubcategories">
+                    </ul>
+                </div>
+                <div class="column">
+                    <h3>小分類</h3>
+                    <ul id="detailedSmallCategories">
+                    </ul>
+                </div>
+                <div class="column">
+                    <h3>細分類</h3>
+                    <ul id="detailedFineCategories">
+                    </ul>
+                </div>
             </div>
-            <div class="column">
-                <h3>中分類</h3>
-                <ul id="detailedMedium">
-                    <!-- 中分類の選択肢 -->
-                    <!-- 大分類の選択に応じて表示 -->
-                </ul>
-            </div>
-            <div class="column">
-                <h3>小分類</h3>
-                <ul id="detailedSmall">
-                    <!-- 小分類の選択肢 -->
-                    <!-- 中分類の選択に応じて表示 -->
-                </ul>
-            </div>
-            <div class="column">
-                <h3>細分類</h3>
-                <ul id="detailedDetailed">
-                    <!-- 細分類の選択肢 -->
-                    <!-- 小分類の選択に応じて表示 -->
-                </ul>
-            </div>
+        </div>
+        <div class="popup-buttons">
+            <button onclick="applySelections('industry')">決定する</button>
         </div>
     </div>
 
+    <!-- 地域のポップアップ -->
     <div id="regionPopup" class="popup">
         <div class="popup-header">
             <h2>地域を選択</h2>
             <div class="search-count-popup">検索結果 <span>12,345</span>件</div>
-            <button onclick="closePopup('region')"><i class="fas fa-times"></i></button>
+            <button onclick="closePopup('region')">&times;</button>
         </div>
+        <input type="text" placeholder="キーワードで探す" id="regionKeyword" class="keyword-search" onkeyup="searchRegionKeyword(this.value)">
         <div class="region-popup-content active">
-            <div id="regionList">
-                <div class="region-group">
-                    <input type="checkbox" id="regionHokkaido" onchange="toggleRegionGroup('hokkaido', this)">
-                    <label for="regionHokkaido" onclick="toggleSubRegions('hokkaido')">北海道</label>
-                    <ul id="hokkaido">
-                        <li><input type="checkbox" value="北海道"> 北海道</li>
+            <div class="column">
+                <h3>都道府県</h3>
+                <ul id="regionsList">
+                    <li><input type="checkbox" id="region1" onchange="toggleRegion('region1')"> <label for="region1">北海道</label> <span class="count-box">1,234</span></li>
+                    <li><input type="checkbox" id="region2" onchange="toggleRegion('region2')"> <label for="region2">青森県</label> <span class="count-box">567</span></li>
+                    <li><input type="checkbox" id="region3" onchange="toggleRegion('region3')"> <label for="region3">岩手県</label> <span class="count-box">890</span></li>
+                </ul>
+            </div>
+            <div class="column">
+                <h3>市区町村</h3>
+                <ul id="municipalitiesList">
+                </ul>
+            </div>
+        </div>
+        <div class="popup-buttons">
+            <button onclick="applySelections('region')">決定する</button>
+        </div>
+    </div>
+
+    <!-- #タグのポップアップ -->
+    <div id="tagPopup" class="popup">
+        <div class="popup-header">
+            <h2>#タグを選択</h2>
+            <div class="search-count-popup">選択済み <span id="tagCount">0</span>件</div>
+            <button onclick="closePopup('tag')">&times;</button>
+        </div>
+        <input type="text" placeholder="キーワードで探す" id="tagKeyword" class="keyword-search" onkeyup="searchTagKeyword(this.value)">
+        <div class="tag-popup-content active">
+            <div class="columns">
+                <div class="column">
+                    <h3>大分類</h3>
+                    <ul id="tagCategories">
+                        <li><input type="checkbox" id="tagCategory1" onchange="toggleTagCategory('tagCategory1')"> <label for="tagCategory1">カテゴリー1</label> <span class="count-box">123</span></li>
+                        <li><input type="checkbox" id="tagCategory2" onchange="toggleTagCategory('tagCategory2')"> <label for="tagCategory2">カテゴリー2</label> <span class="count-box">456</span></li>
+                        <li><input type="checkbox" id="tagCategory3" onchange="toggleTagCategory('tagCategory3')"> <label for="tagCategory3">カテゴリー3</label> <span class="count-box">789</span></li>
                     </ul>
                 </div>
-                <div class="region-group">
-                    <input type="checkbox" id="regionTohoku" onchange="toggleRegionGroup('tohoku', this)">
-                    <label for="regionTohoku" onclick="toggleSubRegions('tohoku')">東北</label>
-                    <ul id="tohoku">
-                        <li><input type="checkbox" value="青森県"> 青森県</li>
-                        <li><input type="checkbox" value="岩手県"> 岩手県</li>
-                        <li><input type="checkbox" value="宮城県"> 宮城県</li>
-                        <li><input type="checkbox" value="秋田県"> 秋田県</li>
-                        <li><input type="checkbox" value="山形県"> 山形県</li>
-                        <li><input type="checkbox" value="福島県"> 福島県</li>
+                <div class="column">
+                    <h3>中分類</h3>
+                    <ul id="tagSubcategories">
                     </ul>
-                </div>
-                <div class="region-group">
-                    <input type="checkbox" id="regionKanto" onchange="toggleRegionGroup('kanto', this)">
-                    <label for="regionKanto" onclick="toggleSubRegions('kanto')">関東</label>
-                    <ul id="kanto">
-                        <li><input type="checkbox" value="茨城県"> 茨城県</li>
-                        <li><input type="checkbox" value="栃木県"> 栃木県</li>
-                        <li><input type="checkbox" value="群馬県"> 群馬県</li>
-                        <li><input type="checkbox" value="埼玉県"> 埼玉県</li>
-                        <li><input type="checkbox" value="千葉県"> 千葉県</li>
-                        <li><input type="checkbox" value="東京都"> 東京都</li>
-                        <li><input type="checkbox" value="神奈川県"> 神奈川県</li>
-                    </ul>
-                </div>
-                <div class="region-group">
-                    <input type="checkbox" id="regionChubu" onchange="toggleRegionGroup('chubu', this)">
-                    <label for="regionChubu" onclick="toggleSubRegions('chubu')">中部</label>
-                    <ul id="chubu">
-                        <li><input type="checkbox" value="新潟県"> 新潟県</li>
-                        <li><input type="checkbox" value="富山県"> 富山県</li>
-                        <li><input type="checkbox" value="石川県"> 石川県</li>
-                        <li><input type="checkbox" value="福井県"> 福井県</li>
-                        <li><input type="checkbox" value="山梨県"> 山梨県</li>
-                        <li><input type="checkbox" value="長野県"> 長野県</li>
-                        <li><input type="checkbox" value="岐阜県"> 岐阜県</li>
-                        <li><input type="checkbox" value="静岡県"> 静岡県</li>
-                        <li><input type="checkbox" value="愛知県"> 愛知県</li>
-                    </ul>
-                </div>
-                <div class="region-group">
-                    <input type="checkbox" id="regionKinki" onchange="toggleRegionGroup('kinki', this)">
-                    <label for="regionKinki" onclick="toggleSubRegions('kinki')">近畿</label>
-                    <ul id="kinki">
-                        <li><input type="checkbox" value="三重県"> 三重県</li>
-                        <li><input type="checkbox" value="滋賀県"> 滋賀県</li>
-                        <li><input type="checkbox" value="京都府"> 京都府</li>
-                        <li><input type="checkbox" value="大阪府"> 大阪府</li>
-                        <li><input type="checkbox" value="兵庫県"> 兵庫県</li>
-                        <li><input type="checkbox" value="奈良県"> 奈良県</li>
-                        <li><input type="checkbox" value="和歌山県"> 和歌山県</li>
-                    </ul>
-                </div>
-                <div class="region-group">
-                    <input type="checkbox" id="regionChugoku" onchange="toggleRegionGroup('chugoku', this)">
-                    <label for="regionChugoku" onclick="toggleSubRegions('chugoku')">中国</label>
-                    <ul id="chugoku">
-                        <li><input type="checkbox" value="鳥取県"> 鳥取県</li>
-                        <li><input type="checkbox" value="島根県"> 島根県</li>
-                        <li><input type="checkbox" value="岡山県"> 岡山県</li>
-                        <li><input type="checkbox" value="広島県"> 広島県</li>
-                        <li><input type="checkbox" value="山口県"> 山口県</li>
-                    </ul>
-                </div>
-                <div class="region-group">
-                    <input type="checkbox" id="regionShikoku" onchange="toggleRegionGroup('shikoku', this)">
-                    <label for="regionShikoku" onclick="toggleSubRegions('shikoku')">四国</label>
-                    <ul id="shikoku">
-                        <li><input type="checkbox" value="徳島県"> 徳島県</li>
-                        <li><input type="checkbox" value="香川県"> 香川県</li>
-                        <li><input type="checkbox" value="愛媛県"> 愛媛県</li>
-                        <li><input type="checkbox" value="高知県"> 高知県</li>
-                    </ul>
-                </div>
-                <div class="region-group">
-                    <input type="checkbox" id="regionKyushu" onchange="toggleRegionGroup('kyushu', this)">
-                    <label for="regionKyushu" onclick="toggleSubRegions('kyushu')">九州・沖縄</label>
-                    <ul id="kyushu">
-                        <li><input type="checkbox" value="福岡県"> 福岡県</li>
-                        <li><input type="checkbox" value="佐賀県"> 佐賀県</li>
-                        <li><input type="checkbox" value="長崎県"> 長崎県</li>
-                        <li><input type="checkbox" value="熊本県"> 熊本県</li>
-                        <li><input type="checkbox" value="大分県"> 大分県</li>
-                        <li><input type="checkbox" value="宮崎県"> 宮崎県</li>
-                        <li><input type="checkbox" value="鹿児島県"> 鹿児島県</li>
-                        <li><input type="checkbox" value="沖縄県"> 沖縄県</li>
-                    </ul>
-                </div>
-                <div class="popup-buttons">
-                    <button onclick="confirmRegion()">決定する</button>
                 </div>
             </div>
+            <div class="columns">
+                <div class="column">
+                    <h3>小分類</h3>
+                    <ul id="tagSmallCategories">
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="popup-buttons">
+            <button onclick="applyTagSelections()">決定する</button>
         </div>
     </div>
 
     <script>
-        function toggleDetails() {
-            const details = document.querySelector('.details');
-            const overlay = document.getElementById('overlay');
-            if (details.style.display === 'none' || details.style.display === '') {
-                details.style.display = 'block';
-                overlay.classList.add('expanded');
-            } else {
-                details.style.display = 'none';
-                overlay.classList.remove('expanded');
+// ポップアップの表示制御
+function showPopup(type, event) {
+    event.stopPropagation();
+    closeAllPopups(); // すべてのポップアップを閉じる
+    document.getElementById(type + 'Popup').classList.add('active');
+    document.getElementById('popupOverlay').classList.add('active');
+}
+
+function closePopup(type) {
+    document.getElementById(type + 'Popup').classList.remove('active');
+    document.getElementById('popupOverlay').classList.remove('active');
+}
+
+function closeAllPopups() {
+    document.querySelectorAll('.popup').forEach(popup => popup.classList.remove('active'));
+    document.getElementById('popupOverlay').classList.remove('active');
+}
+
+// 詳細検索の表示制御
+function toggleDetails() {
+    const details = document.querySelector('.details');
+    const toggleLink = document.querySelector('.toggle-link span');
+    if (details.style.display === 'none' || details.style.display === '') {
+        details.style.display = 'block';
+        toggleLink.innerHTML = '&#9650;'; // 上向き矢印
+    } else {
+        details.style.display = 'none';
+        toggleLink.innerHTML = '&#9660;'; // 下向き矢印
+    }
+    document.querySelector('.overlay').classList.toggle('expanded');
+}
+
+// クリアボタンの動作
+function clearInputs(section) {
+    const sectionElement = document.querySelector(`.${section}`);
+    if (sectionElement) {
+        sectionElement.querySelectorAll('input[type="text"], textarea').forEach(input => input.value = '');
+        sectionElement.querySelectorAll('input[type="checkbox"]').forEach(checkbox => checkbox.checked = false);
+    }
+}
+
+// 業種のタブ切り替え
+function switchTab(type, tab) {
+    document.querySelectorAll(`#${type}Popup .tab`).forEach(tabElement => tabElement.classList.remove('active'));
+    document.querySelectorAll(`#${type}Popup .industry-popup-content`).forEach(content => content.classList.remove('active'));
+    document.querySelector(`#${type}Popup .tab[data-tab="${tab}"]`).classList.add('active');
+    document.getElementById(type + tab.charAt(0).toUpperCase() + tab.slice(1)).classList.add('active');
+}
+
+// キーワード検索
+function searchKeyword(type, keyword) {
+    const categoryMap = {
+        'simple': {
+            'simpleCategory1': '製造業',
+            'simpleCategory2': '小売業',
+            'simpleCategory3': 'サービス業'
+        },
+        'detailed': {
+            'detailedCategory1': 'A.農業、林業',
+            'detailedCategory2': 'B.漁業',
+            'detailedCategory3': 'C.鉱業、採石業、砂利採取業'
+        }
+    };
+
+    const categories = categoryMap[type];
+    for (const [id, name] of Object.entries(categories)) {
+        const checkbox = document.getElementById(id);
+        if (name.includes(keyword)) {
+            checkbox.checked = true;
+            if (type === 'simple') {
+                toggleSimpleCategory(id);
+            } else if (type === 'detailed') {
+                toggleDetailedCategory(id);
+            }
+        } else {
+            checkbox.checked = false;
+            if (type === 'simple') {
+                toggleSimpleCategory(id);
+            } else if (type === 'detailed') {
+                toggleDetailedCategory(id);
             }
         }
+    }
+}
 
-        function clearInputs(section) {
-            if (section === 'keyword') {
-                document.getElementById('excludeKeywords').value = '';
-                document.getElementById('tags').value = '';
-            } else if (section === 'performance') {
-                document.getElementById('revenueMin').value = '';
-                document.getElementById('revenueMax').value = '';
-                document.getElementById('profitMin').value = '';
-                document.getElementById('profitMax').value = '';
-            } else if (section === 'scale') {
-                document.getElementById('capitalMin').value = '';
-                document.getElementById('capitalMax').value = '';
-                document.getElementById('establishedYearMin').value = '';
-                document.getElementById('establishedYearMax').value = '';
-                document.getElementById('employeesMin').value = '';
-                document.getElementById('employeesMax').value = '';
-                document.getElementById('branchesMin').value = '';
-                document.getElementById('branchesMax').value = '';
-                document.getElementById('storesMin').value = '';
-                document.getElementById('storesMax').value = '';
-                document.getElementById('factoriesMin').value = '';
-                document.getElementById('factoriesMax').value = '';
-            } else if (section === 'businessType') {
-                document.getElementById('btob').checked = false;
-                document.getElementById('btoc').checked = false;
-                document.getElementById('ctoc').checked = false;
-            } else if (section === 'contacts') {
-                document.getElementById('summary').checked = false;
-                document.getElementById('corporateNumber').checked = false;
-                document.getElementById('representativeName').checked = false;
-                document.getElementById('phoneNumber').checked = false;
-                document.getElementById('faxNumber').checked = false;
-                document.getElementById('websiteUrl').checked = false;
-                document.getElementById('contactUrl').checked = false;
-                document.getElementById('emailAddress').checked = false;
+// 簡易版業種選択
+function toggleSimpleCategory(categoryId) {
+    const subcategories = {
+        'simpleCategory1': ['食品', '繊維', '木材', '化学'],
+        'simpleCategory2': ['衣料品', '日用品', '家電', '書籍'],
+        'simpleCategory3': ['飲食', '医療', '教育', '宿泊']
+    };
+    const selectedSubcategories = subcategories[categoryId] || [];
+    const subcategoriesList = document.getElementById('simpleSubcategories');
+
+    if (document.getElementById(categoryId).checked) {
+        const newItems = selectedSubcategories.map((subcategory, index) => {
+            const uniqueId = `simpleSubcategory_${categoryId}_${index}`;
+            return `<li data-category="${categoryId}"><input type="checkbox" id="${uniqueId}"> <label for="${uniqueId}">${subcategory}</label> <span class="count-box">123</span></li>`;
+        }).join('');
+        subcategoriesList.insertAdjacentHTML('beforeend', newItems);
+    } else {
+        const itemsToRemove = subcategoriesList.querySelectorAll(`li[data-category="${categoryId}"]`);
+        itemsToRemove.forEach(item => item.remove());
+    }
+}
+
+// 詳細版業種選択
+function toggleDetailedCategory(categoryId) {
+    const subcategories = {
+        'detailedCategory1': ['農業', '林業'],
+        'detailedCategory2': ['漁業（水産養殖業を除く）', '水産養殖業'],
+        'detailedCategory3': ['鉱業、採石業、砂利採取業']
+    };
+    const selectedSubcategories = subcategories[categoryId] || [];
+    const subcategoriesList = document.getElementById('detailedSubcategories');
+
+    if (document.getElementById(categoryId).checked) {
+        const newItems = selectedSubcategories.map((subcategory, index) => {
+            const uniqueId = `detailedSubcategory_${categoryId}_${index}`;
+            return `<li data-category="${categoryId}"><input type="checkbox" id="${uniqueId}" onchange="toggleDetailedSubcategory('${uniqueId}', '${subcategory}')"> <label for="${uniqueId}">${subcategory}</label> <span class="count-box">123</span></li>`;
+        }).join('');
+        subcategoriesList.insertAdjacentHTML('beforeend', newItems);
+    } else {
+        const itemsToRemove = subcategoriesList.querySelectorAll(`li[data-category="${categoryId}"]`);
+        itemsToRemove.forEach(item => {
+            const checkbox = item.querySelector('input[type="checkbox"]');
+            if (checkbox) {
+                checkbox.checked = false;
+                toggleDetailedSubcategory(checkbox.id, checkbox.nextElementSibling.textContent);
             }
-        }
-
-        function showPopup(type, event) {
-            closeAllPopups(); // 他のポップアップを閉じる
-            document.getElementById('popupOverlay').classList.add('active');
-            document.body.classList.add('popup-open');
-
-            if (type === 'industry') {
-                document.getElementById('industryPopup').classList.add('active');
-                document.querySelector('.industry-popup-content.simple').classList.add('active');
-                document.querySelector('.industry-popup-content.detailed').classList.remove('active');
-            } else if (type === 'region') {
-                document.getElementById('regionPopup').classList.add('active');
-                document.querySelector('.region-popup-content').classList.add('active');
-            }
-
-            // イベントの伝播を停止して、バブリングを防ぐ
-            event.stopPropagation();
-        }
-
-        function closePopup(type) {
-            if (type === 'industry') {
-                document.getElementById('industryPopup').classList.remove('active');
-                document.querySelector('.industry-popup-content.simple').classList.remove('active');
-                document.querySelector('.industry-popup-content.detailed').classList.remove('active');
-            } else if (type === 'region') {
-                document.getElementById('regionPopup').classList.remove('active');
-                document.querySelector('.region-popup-content').classList.remove('active');
-            }
-            document.getElementById('popupOverlay').classList.remove('active');
-            document.body.classList.remove('popup-open');
-        }
-
-        function closeAllPopups() {
-            document.getElementById('popupOverlay').classList.remove('active');
-            document.body.classList.remove('popup-open');
-
-            document.getElementById('industryPopup').classList.remove('active');
-            document.getElementById('regionPopup').classList.remove('active');
-            document.querySelectorAll('.region-popup-content').forEach(content => content.classList.remove('active'));
-            document.querySelectorAll('.industry-popup-content').forEach(content => content.classList.remove('active'));
-        }
-
-        // ポップアップ外のクリックでポップアップを閉じる
-        document.addEventListener('click', function(event) {
-            const industryPopup = document.getElementById('industryPopup');
-            const regionPopup = document.getElementById('regionPopup');
-            const popupOverlay = document.getElementById('popupOverlay');
-            
-            // ポップアップまたはオーバーレイ外のクリックをチェック
-            if (!industryPopup.contains(event.target) && !regionPopup.contains(event.target) && event.target.id === 'popupOverlay') {
-                closeAllPopups();
-            }
+            item.remove();
         });
+    }
+}
 
-        // ポップアップ内のクリックでイベント伝播を防ぐ
-        document.getElementById('industryPopup').addEventListener('click', function(event) {
-            event.stopPropagation();
+function toggleDetailedSubcategory(subcategoryId, subcategory) {
+    const smallCategories = {
+        '農業': ['管理、補助的経済活動を行う事業所（01農業）', '耕種農業', '畜産農業', '農業サービス業（園芸サービス業を除く）'],
+        '林業': ['管理、補助的経済活動を行う事業所（02林業）', '育林業', '素材生産業', '特用林産物生産業（きのこ類の栽培を除く）', '林業サービス業', 'その他の林業'],
+        '漁業（水産養殖業を除く）': ['沿岸漁業', '遠洋漁業', '養殖業以外の漁業'],
+        '水産養殖業': ['真珠養殖業', '魚介類養殖業', '甲殻類養殖業'],
+        '鉱業、採石業、砂利採取業': ['石炭採掘業', '鉱石採掘業', '砂利採取業']
+    };
+    const selectedSmallCategories = smallCategories[subcategory] || [];
+    const smallCategoriesList = document.getElementById('detailedSmallCategories');
+
+    if (document.getElementById(subcategoryId).checked) {
+        const newItems = selectedSmallCategories.map((smallCategory, index) => {
+            const uniqueId = `detailedSmallCategory_${subcategory}_${index}`;
+            return `<li data-subcategory="${subcategory}"><input type="checkbox" id="${uniqueId}" onchange="toggleDetailedSmallCategory('${uniqueId}', '${smallCategory}')"> <label for="${uniqueId}">${smallCategory}</label> <span class="count-box">123</span></li>`;
+        }).join('');
+        smallCategoriesList.insertAdjacentHTML('beforeend', newItems);
+    } else {
+        const itemsToRemove = smallCategoriesList.querySelectorAll(`li[data-subcategory="${subcategory}"]`);
+        itemsToRemove.forEach(item => {
+            const checkbox = item.querySelector('input[type="checkbox"]');
+            if (checkbox) {
+                checkbox.checked = false;
+                toggleDetailedSmallCategory(checkbox.id, checkbox.nextElementSibling.textContent);
+            }
+            item.remove();
         });
+    }
+}
 
-        document.getElementById('regionPopup').addEventListener('click', function(event) {
-            event.stopPropagation();
+function toggleDetailedSmallCategory(smallCategoryId, smallCategory) {
+    const fineCategories = {
+        '管理、補助的経済活動を行う事業所（01農業）': ['管理活動1', '管理活動2', '管理活動3'],
+        '耕種農業': ['野菜耕作業', '果樹耕作業', '穀物耕作業'],
+        '畜産農業': ['肉牛飼育', '乳牛飼育', '家禽飼育'],
+        '農業サービス業（園芸サービス業を除く）': ['農作業代行', '農業コンサルティング', '農産物輸送'],
+        '育林業': ['育成1', '育成2', '育成3'],
+        '素材生産業': ['木材生産', '木材加工', '紙パルプ生産'],
+        '特用林産物生産業（きのこ類の栽培を除く）': ['きのこ栽培', '松茸栽培', '他の特用林産物栽培'],
+        '林業サービス業': ['林業コンサルティング', '森林管理', '森林施業'],
+        '沿岸漁業': ['沿岸魚類漁業', '沿岸貝類漁業', '沿岸海藻採取'],
+        '遠洋漁業': ['遠洋魚類漁業', '遠洋貝類漁業', '遠洋海藻採取'],
+        '真珠養殖業': ['真珠養殖1', '真珠養殖2', '真珠養殖3'],
+        '魚介類養殖業': ['魚介類養殖1', '魚介類養殖2', '魚介類養殖3'],
+        '甲殻類養殖業': ['甲殻類養殖1', '甲殻類養殖2', '甲殻類養殖3'],
+        '石炭採掘業': ['石炭採掘1', '石炭採掘2', '石炭採掘3'],
+        '鉱石採掘業': ['鉱石採掘1', '鉱石採掘2', '鉱石採掘3'],
+        '砂利採取業': ['砂利採取1', '砂利採取2', '砂利採取3']
+    };
+    const selectedFineCategories = fineCategories[smallCategory] || [];
+    const fineCategoriesList = document.getElementById('detailedFineCategories');
+
+    if (document.getElementById(smallCategoryId).checked) {
+        const newItems = selectedFineCategories.map((fineCategory, index) => {
+            const uniqueId = `detailedFineCategory_${smallCategory}_${index}`;
+            return `<li data-smallcategory="${smallCategory}"><input type="checkbox" id="${uniqueId}"> <label for="${uniqueId}">${fineCategory}</label> <span class="count-box">123</span></li>`;
+        }).join('');
+        fineCategoriesList.insertAdjacentHTML('beforeend', newItems);
+    } else {
+        const itemsToRemove = fineCategoriesList.querySelectorAll(`li[data-smallcategory="${smallCategory}"]`);
+        itemsToRemove.forEach(item => item.remove());
+    }
+}
+
+// 地域選択
+function toggleRegion(regionId) {
+    const municipalities = {
+        'region1': ['札幌市', '旭川市', '函館市'],
+        'region2': ['青森市', '弘前市', '八戸市'],
+        'region3': ['盛岡市', '一関市', '北上市']
+    };
+
+    const regionCheckbox = document.getElementById(regionId);
+    const municipalitiesList = document.getElementById('municipalitiesList');
+
+    if (regionCheckbox.checked) {
+        const selectedMunicipalities = municipalities[regionId] || [];
+        selectedMunicipalities.sort();
+        const newItems = selectedMunicipalities.map((municipality, index) => {
+            const uniqueId = `municipality_${regionId}_${index}`;
+            return `<li data-region="${regionId}"><input type="checkbox" id="${uniqueId}"> <label for="${uniqueId}">${municipality}</label> <span class="count-box">123</span></li>`;
+        }).join('');
+        municipalitiesList.insertAdjacentHTML('beforeend', newItems);
+    } else {
+        const itemsToRemove = municipalitiesList.querySelectorAll(`li[data-region="${regionId}"]`);
+        itemsToRemove.forEach(item => item.remove());
+    }
+}
+
+// 地域キーワード検索
+function searchRegionKeyword(keyword) {
+    const regionMap = {
+        'region1': '北海道',
+        'region2': '青森県',
+        'region3': '岩手県'
+    };
+
+    for (const [id, name] of Object.entries(regionMap)) {
+        const checkbox = document.getElementById(id);
+        if (name.includes(keyword)) {
+            checkbox.checked = true;
+            toggleRegion(id);
+        } else {
+            checkbox.checked = false;
+            toggleRegion(id);
+        }
+    }
+}
+
+// ポップアップの選択適用
+function applySelections(type) {
+    if (type === 'industry') {
+        let selectedItems = [];
+        if (document.querySelector(`#${type}Popup .tab.active`).getAttribute('data-tab') === 'simple') {
+            selectedItems = Array.from(document.querySelectorAll('#simpleSubcategories input[type="checkbox"]:checked')).map(checkbox => checkbox.nextElementSibling.textContent);
+        } else {
+            selectedItems = Array.from(document.querySelectorAll('#detailedFineCategories input[type="checkbox"]:checked')).map(checkbox => checkbox.nextElementSibling.textContent);
+        }
+        document.getElementById('industryInput').value = selectedItems.sort().join(', ');
+    } else if (type === 'region') {
+        const selectedMunicipalities = Array.from(document.querySelectorAll('#municipalitiesList input[type="checkbox"]:checked')).map(checkbox => checkbox.nextElementSibling.textContent);
+        document.getElementById('regionInput').value = selectedMunicipalities.sort().join(', ');
+    }
+
+    closePopup(type);
+}
+
+// タグのキーワード検索
+function searchTagKeyword(keyword) {
+    const tagMap = {
+        'tagCategory1': 'カテゴリー1',
+        'tagCategory2': 'カテゴリー2',
+        'tagCategory3': 'カテゴリー3'
+    };
+
+    for (const [id, name] of Object.entries(tagMap)) {
+        const checkbox = document.getElementById(id);
+        if (name.includes(keyword)) {
+            checkbox.checked = true;
+            toggleTagCategory(id);
+        } else {
+            checkbox.checked = false;
+            toggleTagCategory(id);
+        }
+    }
+}
+
+// タグのカテゴリ選択
+function toggleTagCategory(categoryId) {
+    const subcategories = {
+        'tagCategory1': ['サブカテゴリー1', 'サブカテゴリー2'],
+        'tagCategory2': ['サブカテゴリー3', 'サブカテゴリー4'],
+        'tagCategory3': ['サブカテゴリー5', 'サブカテゴリー6']
+    };
+    const selectedSubcategories = subcategories[categoryId] || [];
+    const subcategoriesList = document.getElementById('tagSubcategories');
+
+    if (document.getElementById(categoryId).checked) {
+        const newItems = selectedSubcategories.map((subcategory, index) => {
+            const uniqueId = `tagSubcategory_${categoryId}_${index}`;
+            return `<li data-category="${categoryId}"><input type="checkbox" id="${uniqueId}" onchange="toggleTagSubcategory('${uniqueId}', '${subcategory}')"> <label for="${uniqueId}">${subcategory}</label> <span class="count-box">123</span></li>`;
+        }).join('');
+        subcategoriesList.insertAdjacentHTML('beforeend', newItems);
+    } else {
+        const itemsToRemove = subcategoriesList.querySelectorAll(`li[data-category="${categoryId}"]`);
+        itemsToRemove.forEach(item => {
+            const checkbox = item.querySelector('input[type="checkbox"]');
+            if (checkbox) {
+                checkbox.checked = false;
+                toggleTagSubcategory(checkbox.id, checkbox.nextElementSibling.textContent);
+            }
+            item.remove();
         });
+    }
+}
 
-        // 地域グループのチェック切り替え
-        function toggleRegionGroup(groupId, checkbox) {
-            const regionGroup = document.getElementById(groupId);
-            const checkboxes = regionGroup.querySelectorAll('input[type="checkbox"]');
-            checkboxes.forEach(cb => cb.checked = checkbox.checked);
+// タグのサブカテゴリ選択
+function toggleTagSubcategory(subcategoryId, subcategory) {
+    const smallCategories = {
+        'サブカテゴリー1': ['小カテゴリー1', '小カテゴリー2'],
+        'サブカテゴリー2': ['小カテゴリー3', '小カテゴリー4'],
+        'サブカテゴリー3': ['小カテゴリー5', '小カテゴリー6'],
+        'サブカテゴリー4': ['小カテゴリー7', '小カテゴリー8'],
+        'サブカテゴリー5': ['小カテゴリー9', '小カテゴリー10'],
+        'サブカテゴリー6': ['小カテゴリー11', '小カテゴリー12']
+    };
+    const selectedSmallCategories = smallCategories[subcategory] || [];
+    const smallCategoriesList = document.getElementById('tagSmallCategories');
+
+    if (document.getElementById(subcategoryId).checked) {
+        const newItems = selectedSmallCategories.map((smallCategory, index) => {
+            const uniqueId = `tagSmallCategory_${subcategory}_${index}`;
+            return `<li data-subcategory="${subcategory}"><input type="checkbox" id="${uniqueId}"> <label for="${uniqueId}">${smallCategory}</label> <span class="count-box">123</span></li>`;
+        }).join('');
+        smallCategoriesList.insertAdjacentHTML('beforeend', newItems);
+    } else {
+        const itemsToRemove = smallCategoriesList.querySelectorAll(`li[data-subcategory="${subcategory}"]`);
+        itemsToRemove.forEach(item => item.remove());
+    }
+}
+
+// タグの選択を適用
+function applyTagSelections() {
+    const selectedTags = Array.from(document.querySelectorAll('#tagSmallCategories input[type="checkbox"]:checked')).map(checkbox => checkbox.nextElementSibling.textContent);
+    document.getElementById('tags').value = selectedTags.sort().join(', ');
+    document.getElementById('tagCount').textContent = selectedTags.length;
+    closePopup('tag');
+}
+
+// メニューの表示/非表示を切り替える
+function toggleMenu() {
+    const dropdown = document.getElementById('dropdownMenu');
+    dropdown.classList.toggle('active');
+}
+
+// ドキュメントがクリックされたときに、ドロップダウンメニューを閉じる
+document.addEventListener('click', (event) => {
+    const dropdown = document.getElementById('dropdownMenu');
+    const menuToggle = document.querySelector('.menu-toggle');
+
+    if (!dropdown.contains(event.target) && !menuToggle.contains(event.target)) {
+        dropdown.classList.remove('active');
+    }
+});
+
+// ページのロード時にfor属性を追加
+window.onload = () => {
+    document.querySelectorAll('label').forEach((label, index) => {
+        const input = label.previousElementSibling;
+        if (input && input.id) {
+            label.setAttribute('for', input.id);
         }
+    });
 
-        // 地域グループのサブリストを表示/非表示にする
-        function toggleSubRegions(groupId) {
-            const regionGroup = document.getElementById(groupId);
-            const subRegions = regionGroup.querySelectorAll('ul');
+    // 数字のみの入力制限とカンマ区切りの自動挿入
+    document.querySelectorAll('.numeric-only').forEach(input => {
+        input.addEventListener('input', () => {
+            input.value = input.value.replace(/[^0-9]/g, '');
+            formatNumber(input); // 入力時にフォーマット関数を呼び出す
+        });
+    });
+};
 
-            subRegions.forEach(ul => {
-                ul.style.display = ul.style.display === 'none' || ul.style.display === '' ? 'block' : 'none';
-            });
-        }
+// 数字の入力をフォーマットする
+function formatNumber(input) {
+    let value = input.value.replace(/,/g, ''); // 既存のカンマを削除
+    if (value) {
+        value = parseInt(value, 10).toLocaleString(); // カンマ付きで再フォーマット
+        input.value = value;
+    }
+}
 
-        function confirmRegion() {
-            const regionInput = document.getElementById('regionInput');
-            const selectedRegions = Array.from(document.querySelectorAll('#regionPopup input[type="checkbox"]:checked'))
-                .map(checkbox => checkbox.value);
+// フォーマット対象のフィールドを設定する
+const fields = [
+    'revenueMin', 'revenueMax', 'profitMin', 'profitMax',
+    'capitalMin', 'capitalMax', 'employeesMin', 'employeesMax',
+    'branchesMin', 'branchesMax', 'storesMin', 'storesMax',
+    'factoriesMin', 'factoriesMax'
+];
 
-            regionInput.value = selectedRegions.join(', ');
-            closeAllPopups(); // ポップアップを閉じる
-        }
-
-        // ページの初期化
-        function initialize() {
-            // 初期化時に必要なリスナー設定
-            document.getElementById('popupOverlay').addEventListener('click', (event) => {
-                // ポップアップ外のクリックで閉じる
-                if (event.target.id === 'popupOverlay') {
-                    closeAllPopups();
-                }
-            });
-
-            // タブの切り替え
-            document.querySelectorAll('.tab').forEach(tab => {
-                tab.addEventListener('click', function () {
-                    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-                    document.querySelectorAll('.industry-popup-content').forEach(c => c.classList.remove('active'));
-                    document.querySelectorAll('.region-popup-content').forEach(c => c.classList.remove('active'));
-
-                    this.classList.add('active');
-                    document.querySelector('.' + this.getAttribute('data-tab')).classList.add('active');
-                });
-            });
-        }
-
-        // ページロード時に初期化を呼び出す
-        document.addEventListener('DOMContentLoaded', initialize);
+// 各フィールドにフォーマット関数を適用する
+fields.forEach(fieldId => {
+    const field = document.getElementById(fieldId);
+    if (field) {
+        field.addEventListener('input', () => formatNumber(field));
+    }
+});
     </script>
 </body>
 </html>
