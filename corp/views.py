@@ -1,8 +1,8 @@
 # your_app_name/views.py
 from django.shortcuts import render
-from .models import Company
+from .models import Company, Industry, IndustryCategory, IndustryDetail, IndustrySubcategory
 from .forms import CompanySearchForm
-from django.db.models import Q
+from django.http import JsonResponse
 
 def company_list(request):
     form = CompanySearchForm(request.GET)
@@ -29,7 +29,26 @@ def company_list(request):
     return render(request, 'corp/company_list.html', {'companies': companies, 'form': form})
 
 def top(request):
-    return render(request, 'corp/top.html', {})
+    categories = IndustryCategory.objects.all()
+    return render(request, 'corp/top.html', {'categories': categories})
+
+def get_subcategories(request):
+    category_id = request.GET.get('category_id')
+    subcategories = Industry.objects.filter(category_id=category_id)
+    subcategories_list = list(subcategories.values('id', 'code', 'name'))
+    return JsonResponse(subcategories_list, safe=False)
+
+def get_smallcategories(request):
+    subcategory_id = request.GET.get('subcategory_id')
+    smallcategories = IndustrySubcategory.objects.filter(industry_id=subcategory_id)
+    smallcategories_list = list(smallcategories.values('id', 'code', 'name'))
+    return JsonResponse(smallcategories_list, safe=False)
+
+def get_finecategories(request):
+    smallcategory_id = request.GET.get('smallcategory_id')
+    finecategories = IndustryDetail.objects.filter(subcategory_id=smallcategory_id)
+    finecategories_list = list(finecategories.values('id', 'code', 'name'))
+    return JsonResponse(finecategories_list, safe=False)
 
 from rest_framework import viewsets
 from .models import Company

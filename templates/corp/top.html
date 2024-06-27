@@ -1188,12 +1188,16 @@
         <div class="industry-popup-content active" id="industrySimple">
             <input type="text" placeholder="キーワードで探す" id="simpleIndustryKeyword" class="keyword-search" onkeyup="searchKeyword('simple', this.value)">
             <div class="columns">
-                <div class="column">
+               <div class="column">
                     <h3>大分類</h3>
-                    <ul id="simpleCategories">
-                        <li><input type="checkbox" id="simpleCategory1" onchange="toggleSimpleCategory('simpleCategory1')"> <label for="simpleCategory1">製造業</label> <span class="count-box">1,234</span></li>
-                        <li><input type="checkbox" id="simpleCategory2" onchange="toggleSimpleCategory('simpleCategory2')"> <label for="simpleCategory2">小売業</label> <span class="count-box">567</span></li>
-                        <li><input type="checkbox" id="simpleCategory3" onchange="toggleSimpleCategory('simpleCategory3')"> <label for="simpleCategory3">サービス業</label> <span class="count-box">890</span></li>
+                    <ul id="detailedCategories">
+                        {% for category in categories %}
+                        <li>
+                            <input type="checkbox" id="detailedCategory{{ category.id }}" onchange="toggleDetailedCategory('{{ category.id }}')">
+                            <label for="detailedCategory{{ category.id }}">{{ category.code }}.{{ category.name }}</label>
+                            <span class="count-box">1,234</span>
+                        </li>
+                        {% endfor %}
                     </ul>
                 </div>
                 <div class="column">
@@ -1411,32 +1415,16 @@ function toggleSimpleCategory(categoryId) {
 
 // 詳細版業種選択
 function toggleDetailedCategory(categoryId) {
-    const subcategories = {
-        'detailedCategory1': ['農業', '林業'],
-        'detailedCategory2': ['漁業（水産養殖業を除く）', '水産養殖業'],
-        'detailedCategory3': ['鉱業、採石業、砂利採取業']
-    };
-    const selectedSubcategories = subcategories[categoryId] || [];
-    const subcategoriesList = document.getElementById('detailedSubcategories');
-
-    if (document.getElementById(categoryId).checked) {
-        const newItems = selectedSubcategories.map((subcategory, index) => {
-            const uniqueId = `detailedSubcategory_${categoryId}_${index}`;
-            return `<li data-category="${categoryId}"><input type="checkbox" id="${uniqueId}" onchange="toggleDetailedSubcategory('${uniqueId}', '${subcategory}')"> <label for="${uniqueId}">${subcategory}</label> <span class="count-box">123</span></li>`;
-        }).join('');
-        subcategoriesList.insertAdjacentHTML('beforeend', newItems);
-    } else {
-        const itemsToRemove = subcategoriesList.querySelectorAll(`li[data-category="${categoryId}"]`);
-        itemsToRemove.forEach(item => {
-            const checkbox = item.querySelector('input[type="checkbox"]');
-            if (checkbox) {
-                checkbox.checked = false;
-                toggleDetailedSubcategory(checkbox.id, checkbox.nextElementSibling.textContent);
-            }
-            item.remove();
+    $.get('/get_subcategories/', { category_id: categoryId }, function(data) {
+        const subcategoriesList = $('#detailedSubcategories');
+        subcategoriesList.empty();
+        data.forEach(function(subcategory) {
+            const uniqueId = `detailedSubcategory_${subcategory.id}`;
+            subcategoriesList.append(`<li data-category="${categoryId}"><input type="checkbox" id="${uniqueId}" onchange="toggleDetailedSubcategory('${uniqueId}', '${subcategory.id}')"> <label for="${uniqueId}">${subcategory.code}.${subcategory.name}</label> <span class="count-box">123</span></li>`);
         });
-    }
+    });
 }
+
 
 function toggleDetailedSubcategory(subcategoryId, subcategory) {
     const smallCategories = {

@@ -120,14 +120,14 @@ USE_TZ = True
 
 # settings.py
 
-# 静的ファイルのURL
 STATIC_URL = '/static/'
-
-# STATICFILES_DIRS は開発中に静的ファイルを探すディレクトリのリストです
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static_files'),  # 例えば、プロジェクトディレクトリ内のstatic_filesフォルダ
-    # 他のディレクトリがあればここに追加
+    BASE_DIR / "static",
 ]
+
+# Media files (Uploaded files)
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / "media"
 
 # 必要に応じて以下も追加
 STATIC_ROOT = '/var/www/vhosts/salesdb.jp/httpdocs/static/'
