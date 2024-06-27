@@ -4,7 +4,8 @@ class IndustryCategory(models.Model):
     """
     大分類の業界カテゴリを管理します。
     """
-    name = models.CharField(max_length=255, unique=True, verbose_name="大分類名")
+    code = models.CharField(max_length=10, unique=True, verbose_name="大分類コード")
+    name = models.CharField(max_length=255, verbose_name="大分類名")
     
     def __str__(self):
         return self.name
@@ -13,8 +14,31 @@ class Industry(models.Model):
     """
     中分類の業界を管理します。
     """
-    name = models.CharField(max_length=255, unique=True, verbose_name="中分類名")
+    code = models.CharField(max_length=10, unique=True, verbose_name="中分類コード")
+    name = models.CharField(max_length=255, verbose_name="中分類名")
     category = models.ForeignKey(IndustryCategory, on_delete=models.CASCADE, related_name='industries', verbose_name="大分類")
+    
+    def __str__(self):
+        return self.name
+
+class IndustrySubcategory(models.Model):
+    """
+    小分類の業界を管理します。
+    """
+    code = models.CharField(max_length=10, unique=True, verbose_name="小分類コード")
+    name = models.CharField(max_length=255, verbose_name="小分類名")
+    industry = models.ForeignKey(Industry, on_delete=models.CASCADE, related_name='subcategories', verbose_name="中分類")
+    
+    def __str__(self):
+        return self.name
+
+class IndustryDetail(models.Model):
+    """
+    細分類の業界を管理します。
+    """
+    code = models.CharField(max_length=10, unique=True, verbose_name="細分類コード")
+    name = models.CharField(max_length=255, verbose_name="細分類名")
+    subcategory = models.ForeignKey(IndustrySubcategory, on_delete=models.CASCADE, related_name='details', verbose_name="小分類")
     
     def __str__(self):
         return self.name
@@ -24,7 +48,7 @@ class Company(models.Model):
     企業情報を管理します。
     """
     name = models.CharField(max_length=255, verbose_name="企業名")
-    industry = models.ForeignKey(Industry, on_delete=models.CASCADE, related_name='companies', verbose_name="業界")
+    industry_detail = models.ForeignKey(IndustryDetail, on_delete=models.CASCADE, related_name='companies', verbose_name="細分類")
     description = models.TextField(blank=True, null=True, verbose_name="説明")
     established_date = models.DateField(blank=True, null=True, verbose_name="設立日")
     employees = models.PositiveIntegerField(blank=True, null=True, verbose_name="従業員数")

@@ -13,8 +13,8 @@ class IndustryAdmin(admin.ModelAdmin):
 
 @admin.register(Company)
 class CompanyAdmin(admin.ModelAdmin):
-    list_display = ('name', 'industry', 'established_date', 'employees', 'revenue')
-    list_filter = ('industry', 'established_date')
+    list_display = ('name',  'established_date', 'employees', 'revenue')
+    list_filter = ('established_date',)
     search_fields = ('name', 'industry__name', 'description', 'address', 'city', 'state', 'country')
 
 @admin.register(Contact)
