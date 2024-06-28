@@ -26,7 +26,7 @@ SECRET_KEY = "django-insecure-vls#70j394lywg7^9knh2sn=1tmv#aj5!rrig12i2bdmw*3l6g
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = ['salesdb.jp', 'www.salesdb.jp']
 
 
 # Application definition
@@ -153,6 +153,11 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'dmjdesu@gmail.com'
 EMAIL_HOST_PASSWORD = 'esyu mefk yduk iudl'
+
+CSRF_TRUSTED_ORIGINS = ['https://salesdb.jp', 'https://www.salesdb.jp']
+SECURE_SSL_REDIRECT = True
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
 
 # Logging configuration
 LOGGING = {
