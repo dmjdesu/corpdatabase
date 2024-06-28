@@ -100,6 +100,8 @@ body {
     padding-bottom: 80px;
     flex: 1;
     transition: padding 0.3s ease-in-out;
+    min-height: 100vh;
+    box-sizing: border-box;
 }
 
 .overlay.expanded {
