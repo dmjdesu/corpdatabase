@@ -155,7 +155,7 @@ EMAIL_HOST_USER = 'dmjdesu@gmail.com'
 EMAIL_HOST_PASSWORD = 'esyu mefk yduk iudl'
 
 CSRF_TRUSTED_ORIGINS = ['https://salesdb.jp', 'https://www.salesdb.jp']
-SECURE_SSL_REDIRECT = True
+SECURE_SSL_REDIRECT = False
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
 
