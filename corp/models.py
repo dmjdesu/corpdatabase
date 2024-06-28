@@ -42,6 +42,28 @@ class IndustryDetail(models.Model):
     
     def __str__(self):
         return self.name
+    
+class OriginIndustryCategory(models.Model):
+    """
+    オリジナル大分類の業界カテゴリを管理します。
+    """
+    name = models.CharField(max_length=255, verbose_name="大分類名")
+    description = models.TextField(verbose_name="大分類の説明", blank=True, null=True)
+    
+    def __str__(self):
+        return self.name
+
+class OriginIndustry(models.Model):
+    """
+    オリジナル中分類の業界カテゴリを管理します。
+    """
+    name = models.CharField(max_length=255, verbose_name="中分類名")
+    category = models.ForeignKey(OriginIndustryCategory, on_delete=models.CASCADE, related_name='industries', verbose_name="大分類")
+    description = models.TextField(verbose_name="中分類の説明", blank=True, null=True)
+    
+    def __str__(self):
+        return self.name
+
 
 class Company(models.Model):
     """
@@ -49,6 +71,7 @@ class Company(models.Model):
     """
     name = models.CharField(max_length=255, verbose_name="企業名")
     industry_detail = models.ForeignKey(IndustryDetail, on_delete=models.CASCADE, related_name='companies', verbose_name="細分類")
+    origin_industry = models.ForeignKey(OriginIndustry, on_delete=models.CASCADE, related_name='companies', verbose_name="オリジナル中分類")
     description = models.TextField(blank=True, null=True, verbose_name="説明")
     established_date = models.DateField(blank=True, null=True, verbose_name="設立日")
     employees = models.PositiveIntegerField(blank=True, null=True, verbose_name="従業員数")

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from corp.models import IndustryCategory, Industry, IndustrySubcategory, IndustryDetail, Company, Contact, Note, Tag
+from corp.models import IndustryCategory, Industry, IndustrySubcategory, IndustryDetail, Company, Contact, Note, Tag, OriginIndustryCategory, OriginIndustry
 
 class IndustryCategorySerializer(serializers.ModelSerializer):
     class Meta:
@@ -39,4 +39,14 @@ class NoteSerializer(serializers.ModelSerializer):
 class TagSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tag
+        fields = '__all__'
+
+class OriginIndustryCategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = OriginIndustryCategory
+        fields = '__all__'
+
+class OriginIndustrySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = OriginIndustry
         fields = '__all__'

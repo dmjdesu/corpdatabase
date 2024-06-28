@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
 import axios from 'axios';
+import DetailSearchForm from './components/DetailSearchForm';
 
 const App = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -49,6 +50,9 @@ const App = () => {
       </header>
       <main className="overlay">
         <h1 className="headline">登録データ数が業界最多の800万件以上<br />国内最大級の企業/店舗/施設データベース</h1>
+        <div class="logo-container">
+            <img src="https://salessystem.co.jp/wpcms/wp-content/uploads/2024/05/SalesDB_モノトーン_logo_by表記あり_白抜き.png" alt="SalesDB ロゴ" class="logo"/>
+        </div>
         <div className="search-results">
           <div className="hexagon">
             <img src="https://salessystem.co.jp/wpcms/wp-content/uploads/2024/06/mark.png" alt="月300件まで無料ダウンロード" />
@@ -61,6 +65,7 @@ const App = () => {
           <input type="text" placeholder="フリーワード" />
           <button>検索</button>
         </div>
+        <DetailSearchForm />
         <div className="tags">
           <a href="#" className="tag">#店舗</a>
           <a href="#" className="tag">#株式会社のみ</a>
@@ -88,6 +93,11 @@ const IndustryPopup = ({ onClose, applySelections }) => {
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [selectedSubcategory, setSelectedSubcategory] = useState(null);
   const [selectedSmallcategory, setSelectedSmallcategory] = useState(null);
+  const [selectedOriginCategory, setSelectedOriginCategory] = useState(null);
+  const [selectedOriginSubcategory, setSelectedOriginSubcategory] = useState(null);
+
+  const [originCategories, setOriginCategories] = useState([]);
+  const [originSubcategories, setOriginSubcategories] = useState([]);
 
   useEffect(() => {
     // カテゴリデータの取得
@@ -96,11 +106,26 @@ const IndustryPopup = ({ onClose, applySelections }) => {
       .catch(error => console.error('Error fetching categories:', error));
   }, []);
 
+  useEffect(() => {
+    // オリジナルカテゴリデータの取得
+    axios.get('/api/origin_industry_categories/')
+      .then(response => setOriginCategories(response.data))
+      .catch(error => console.error('Error fetching categories:', error));
+  }, []);
+
   const handleCategoryChange = (categoryId) => {
     setSelectedCategory(categoryId);
     // サブカテゴリデータの取得
     axios.get('/api/industries/', { params: { category_id: categoryId } })
       .then(response => setSubcategories(response.data))
+      .catch(error => console.error('Error fetching subcategories:', error));
+  };
+
+  const handleOriginCategoryChange = (categoryId) => {
+    setSelectedOriginCategory(categoryId);
+    // オリジナルサブカテゴリデータの取得
+    axios.get('/api/industries/', { params: { category_id: categoryId } })
+      .then(response => setOriginSubcategories(response.data))
       .catch(error => console.error('Error fetching subcategories:', error));
   };
 
@@ -143,9 +168,9 @@ const IndustryPopup = ({ onClose, applySelections }) => {
               <div className="column">
                 <h3>大分類</h3>
                 <ul>
-                  {categories.map(category => (
+                  {originCategories.map(category => (
                     <li key={category.id}>
-                      <input type="checkbox" id={`category${category.id}`} onChange={() => handleCategoryChange(category.id)} />
+                      <input type="checkbox" id={`category${category.id}`} onChange={() => handleOriginCategoryChange(category.id)} />
                       <label htmlFor={`category${category.id}`}>{category.code}.{category.name}</label>
                       <span className="count-box">1,234</span>
                     </li>
@@ -155,9 +180,9 @@ const IndustryPopup = ({ onClose, applySelections }) => {
               <div className="column">
                 <h3>中分類</h3>
                 <ul>
-                  {subcategories.map(subcategory => (
+                  {originSubcategories.map(subcategory => (
                     <li key={subcategory.id}>
-                      <input type="checkbox" id={`subcategory${subcategory.id}`} onChange={() => handleSubcategoryChange(subcategory.id)} />
+                      <input type="checkbox" id={`subcategory${subcategory.id}`} onChange={() => console.log(subcategory.id)} />
                       <label htmlFor={`subcategory${subcategory.id}`}>{subcategory.code}.{subcategory.name}</label>
                       <span className="count-box">567</span>
                     </li>

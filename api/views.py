@@ -1,6 +1,6 @@
 from rest_framework import viewsets
-from corp.models import IndustryCategory, Industry, IndustrySubcategory, IndustryDetail, Company, Contact, Note, Tag
-from .serializers import (IndustryCategorySerializer, IndustrySerializer, IndustrySubcategorySerializer, IndustryDetailSerializer, CompanySerializer, ContactSerializer, NoteSerializer, TagSerializer)
+from corp.models import IndustryCategory, Industry, OriginIndustryCategory, OriginIndustry, IndustrySubcategory, IndustryDetail, Company, Contact, Note, Tag
+from .serializers import (IndustryCategorySerializer, IndustrySerializer, OriginIndustryCategorySerializer, OriginIndustrySerializer, IndustrySubcategorySerializer, IndustryDetailSerializer, CompanySerializer, ContactSerializer, NoteSerializer, TagSerializer)
 
 class IndustryCategoryViewSet(viewsets.ModelViewSet):
     queryset = IndustryCategory.objects.all()
@@ -33,3 +33,11 @@ class NoteViewSet(viewsets.ModelViewSet):
 class TagViewSet(viewsets.ModelViewSet):
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
+
+class OriginIndustryCategoryViewSet(viewsets.ModelViewSet):
+    queryset = OriginIndustryCategory.objects.all()
+    serializer_class = OriginIndustryCategorySerializer
+
+class OriginIndustryViewSet(viewsets.ModelViewSet):
+    queryset = OriginIndustry.objects.all()
+    serializer_class = OriginIndustrySerializer
