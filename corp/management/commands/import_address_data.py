@@ -34,7 +34,7 @@ class Command(BaseCommand):
 
                     # 同一の都道府県内で市名がすでに存在するか確認
                     prefecture = Prefecture.objects.get(
-                        prefecture_name=prefecture_name,
+                        name=prefecture_name,
                     )
 
                     city, city_created = City.objects.get_or_create(
@@ -47,9 +47,9 @@ class Command(BaseCommand):
                     )
 
                     if city_created:
-                        self.stdout.write(self.style.SUCCESS(f'市を作成しました: {city.city_name}'))
+                        self.stdout.write(self.style.SUCCESS(f'市を作成しました: {city.name}'))
                     else:
-                        self.stdout.write(f'市 {city.city_name} はすでに存在しています。')
+                        self.stdout.write(f'市 {city.name} はすでに存在しています。')
 
                 else:
                     # 都道府県を作成または取得
@@ -62,6 +62,6 @@ class Command(BaseCommand):
                     )
 
                 if prefecture_created:
-                    self.stdout.write(self.style.SUCCESS(f'都道府県を作成しました: {prefecture.prefecture_name}'))
+                    self.stdout.write(self.style.SUCCESS(f'都道府県を作成しました: {prefecture.name}'))
 
         self.stdout.write(self.style.SUCCESS('Data import completed successfully'))
