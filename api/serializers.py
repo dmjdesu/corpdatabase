@@ -1,6 +1,5 @@
 from rest_framework import serializers
-from corp.models import IndustryCategory, Industry, IndustrySubcategory, IndustryDetail, Company, Contact, Note, Tag, OriginIndustryCategory, OriginIndustry
-
+from corp.models import *
 class IndustryCategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = IndustryCategory
@@ -36,11 +35,6 @@ class NoteSerializer(serializers.ModelSerializer):
         model = Note
         fields = '__all__'
 
-class TagSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Tag
-        fields = '__all__'
-
 class OriginIndustryCategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = OriginIndustryCategory
@@ -49,4 +43,37 @@ class OriginIndustryCategorySerializer(serializers.ModelSerializer):
 class OriginIndustrySerializer(serializers.ModelSerializer):
     class Meta:
         model = OriginIndustry
+        fields = '__all__'
+
+class TagSmallcategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TagSmallcategory
+        fields = '__all__'
+
+class TagSubcategorySerializer(serializers.ModelSerializer):
+    smallcategories = TagSmallcategorySerializer(many=True, read_only=True)
+
+    class Meta:
+        model = TagSubcategory
+        fields = '__all__'
+
+class TagCategorySerializer(serializers.ModelSerializer):
+    subcategories = TagSubcategorySerializer(many=True, read_only=True)
+
+    class Meta:
+        model = TagCategory
+        fields = '__all__'
+
+class CitySerializer(serializers.ModelSerializer):
+    prefecture_name = serializers.CharField(source='prefecture.name', read_only=True)
+
+    class Meta:
+        model = City
+        fields = ['id', 'code', 'name', 'name_kana', 'prefecture_name']
+
+class PrefectureSerializer(serializers.ModelSerializer):
+    cities = CitySerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Prefecture
         fields = '__all__'

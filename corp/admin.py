@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import IndustryCategory, Industry, Company, Contact, Note, Tag
+from .models import IndustryCategory, Industry, Company, Contact, Note
 
 @admin.register(IndustryCategory)
 class IndustryCategoryAdmin(admin.ModelAdmin):
@@ -28,8 +28,3 @@ class NoteAdmin(admin.ModelAdmin):
     list_display = ('company', 'content', 'created_at', 'updated_at')
     list_filter = ('company', 'created_at')
     search_fields = ('company__name', 'content')
-
-@admin.register(Tag)
-class TagAdmin(admin.ModelAdmin):
-    list_display = ('name',)
-    search_fields = ('name',)

@@ -1,6 +1,6 @@
 from rest_framework import viewsets
-from corp.models import IndustryCategory, Industry, OriginIndustryCategory, OriginIndustry, IndustrySubcategory, IndustryDetail, Company, Contact, Note, Tag
-from .serializers import (IndustryCategorySerializer, IndustrySerializer, OriginIndustryCategorySerializer, OriginIndustrySerializer, IndustrySubcategorySerializer, IndustryDetailSerializer, CompanySerializer, ContactSerializer, NoteSerializer, TagSerializer)
+from corp.models import IndustryCategory, Industry, OriginIndustryCategory, OriginIndustry, IndustrySubcategory, IndustryDetail, Company, Contact, Note
+from .serializers import *
 
 class IndustryCategoryViewSet(viewsets.ModelViewSet):
     queryset = IndustryCategory.objects.all()
@@ -30,9 +30,6 @@ class NoteViewSet(viewsets.ModelViewSet):
     queryset = Note.objects.all()
     serializer_class = NoteSerializer
 
-class TagViewSet(viewsets.ModelViewSet):
-    queryset = Tag.objects.all()
-    serializer_class = TagSerializer
 
 class OriginIndustryCategoryViewSet(viewsets.ModelViewSet):
     queryset = OriginIndustryCategory.objects.all()
@@ -41,3 +38,31 @@ class OriginIndustryCategoryViewSet(viewsets.ModelViewSet):
 class OriginIndustryViewSet(viewsets.ModelViewSet):
     queryset = OriginIndustry.objects.all()
     serializer_class = OriginIndustrySerializer
+
+class OriginIndustryCategoryViewSet(viewsets.ModelViewSet):
+    queryset = OriginIndustryCategory.objects.all()
+    serializer_class = OriginIndustryCategorySerializer
+
+class OriginIndustryViewSet(viewsets.ModelViewSet):
+    queryset = OriginIndustry.objects.all()
+    serializer_class = OriginIndustrySerializer
+
+class TagCategoryViewSet(viewsets.ModelViewSet):
+    queryset = TagCategory.objects.all()
+    serializer_class = TagCategorySerializer
+
+class TagSubcategoryCategoryViewSet(viewsets.ModelViewSet):
+    queryset = TagSubcategory.objects.all()
+    serializer_class = TagSubcategorySerializer
+
+class TagSmallcategoryViewSet(viewsets.ModelViewSet):
+    queryset = TagSmallcategory.objects.all()
+    serializer_class = TagSmallcategorySerializer
+
+class PrefectureViewSet(viewsets.ModelViewSet):
+    queryset = Prefecture.objects.all()
+    serializer_class = PrefectureSerializer
+
+class CityViewSet(viewsets.ModelViewSet):
+    queryset = City.objects.all()
+    serializer_class = CitySerializer

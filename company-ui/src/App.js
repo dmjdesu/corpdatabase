@@ -65,7 +65,7 @@ const App = () => {
           <input type="text" placeholder="フリーワード" />
           <button>検索</button>
         </div>
-        <DetailSearchForm />
+        <DetailSearchForm showPopup={showPopup} />
         <div className="tags">
           <a href="#" className="tag">#店舗</a>
           <a href="#" className="tag">#株式会社のみ</a>
@@ -256,6 +256,24 @@ const IndustryPopup = ({ onClose, applySelections }) => {
 };
 
 const RegionPopup = ({ onClose, applySelections }) => {
+  const [prefectures, setPrefectures] = useState([]);
+  const [cities, setCities] = useState([]);
+ 
+  useEffect(() => {
+    // カテゴリデータの取得
+    axios.get('/api/prefectures/')
+      .then(response => setPrefectures(response.data))
+      .catch(error => console.error('Error fetching categories:', error));
+  }, []);
+
+  const handlePrefecturesChange = (categoryId) => {
+    // サブカテゴリデータの取得
+    axios.get('/api/cities/', { params: { category_id: categoryId } })
+      .then(response => setCities(response.data))
+      .catch(error => console.error('Error fetching subcategories:', error));
+  };
+
+
   return (
     <div className="popup-overlay active" onClick={onClose}>
       <div className="popup active" onClick={(e) => e.stopPropagation()}>
@@ -269,15 +287,25 @@ const RegionPopup = ({ onClose, applySelections }) => {
           <div className="column">
             <h3>都道府県</h3>
             <ul>
-              <li><input type="checkbox" id="region1" /> <label htmlFor="region1">北海道</label> <span className="count-box">1,234</span></li>
-              <li><input type="checkbox" id="region2" /> <label htmlFor="region2">青森県</label> <span className="count-box">567</span></li>
-              <li><input type="checkbox" id="region3" /> <label htmlFor="region3">岩手県</label> <span className="count-box">890</span></li>
+               {prefectures.map(category => (
+                  <li key={category.id}>
+                    <input type="checkbox" id={`prefecture${category.id}`} onChange={() => handlePrefecturesChange(category.id)} />
+                    <label htmlFor={`prefecture${category.id}`}>{category.name}</label>
+                    <span className="count-box">{category.count}</span>
+                  </li>
+                ))}
             </ul>
           </div>
           <div className="column">
             <h3>市区町村</h3>
             <ul>
-              {/* Populate municipalities here */}
+              {cities.map(city => (
+                  <li key={city.id}>
+                    <input type="checkbox" id={`city${city.id}`} onChange={() => console.log(city.id)} />
+                    <label htmlFor={`city${city.id}`}>{city.name} ({city.prefecture_name})</label>
+                    <span className="count-box">{city.count}</span>
+                  </li>
+                ))}
             </ul>
           </div>
         </div>
@@ -290,6 +318,31 @@ const RegionPopup = ({ onClose, applySelections }) => {
 };
 
 const TagPopup = ({ onClose, applyTagSelections, tagCount }) => {
+  const [tagCategories, setTagCategories] = useState([]);
+  const [tagSubcategories, setTagSubcategories] = useState([]);
+  const [tagSmallcategories, setTagSmallcategories] = useState([]);
+
+  useEffect(() => {
+    // カテゴリデータの取得
+    axios.get('/api/tags_categories/')
+      .then(response => setTagCategories(response.data))
+      .catch(error => console.error('Error fetching categories:', error));
+  }, []);
+
+  const handleTagCategoryChange = (categoryId) => {
+    // サブカテゴリデータの取得
+    axios.get('/api/tags_subcategories/', { params: { category_id: categoryId } })
+      .then(response => setTagSubcategories(response.data))
+      .catch(error => console.error('Error fetching subcategories:', error));
+  };
+
+  const handleTagSubcategoryChange = (subcategory) => {
+    // 小カテゴリデータの取得
+    axios.get('/api/tags_smallcategories/', { params: { subcategory_id: subcategory.id } })
+      .then(response => setTagSmallcategories(response.data))
+      .catch(error => console.error('Error fetching smallcategories:', error));
+  };
+
   return (
     <div className="popup-overlay active" onClick={onClose}>
       <div className="popup active" onClick={(e) => e.stopPropagation()}>
@@ -304,21 +357,37 @@ const TagPopup = ({ onClose, applyTagSelections, tagCount }) => {
             <div className="column">
               <h3>大分類</h3>
               <ul>
-                <li><input type="checkbox" id="tagCategory1" /> <label htmlFor="tagCategory1">カテゴリー1</label> <span className="count-box">123</span></li>
-                <li><input type="checkbox" id="tagCategory2" /> <label htmlFor="tagCategory2">カテゴリー2</label> <span className="count-box">456</span></li>
-                <li><input type="checkbox" id="tagCategory3" /> <label htmlFor="tagCategory3">カテゴリー3</label> <span className="count-box">789</span></li>
+                {tagCategories.map(category => (
+                  <li key={category.id}>
+                    <input type="checkbox" id={`tagCategory${category.id}`} onChange={() => handleTagCategoryChange(category.id)} />
+                    <label htmlFor={`tagCategory${category.id}`}>{category.name}</label>
+                    <span className="count-box">{category.count}</span>
+                  </li>
+                ))}
               </ul>
             </div>
             <div className="column">
               <h3>中分類</h3>
               <ul>
-                {/* Populate tag subcategories here */}
+                {tagSubcategories.map(subcategory => (
+                  <li key={subcategory.id}>
+                    <input type="checkbox" id={`tagSubcategory${subcategory.id}`} onChange={() => handleTagSubcategoryChange(subcategory)} />
+                    <label htmlFor={`tagSubcategory${subcategory.id}`}>{subcategory.name}</label>
+                    <span className="count-box">{subcategory.count}</span>
+                  </li>
+                ))}
               </ul>
             </div>
             <div className="column">
               <h3>小分類</h3>
               <ul>
-                {/* Populate tag small categories here */}
+                {tagSmallcategories.map(smallcategory => (
+                  <li key={smallcategory.id}>
+                    <input type="checkbox" id={`tagSmallcategory${smallcategory.id}`} />
+                    <label htmlFor={`tagSmallcategory${smallcategory.id}`}>{smallcategory.name}</label>
+                    <span className="count-box">{smallcategory.count}</span>
+                  </li>
+                ))}
               </ul>
             </div>
           </div>

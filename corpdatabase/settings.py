@@ -26,7 +26,7 @@ SECRET_KEY = "django-insecure-vls#70j394lywg7^9knh2sn=1tmv#aj5!rrig12i2bdmw*3l6g
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['salesdb.jp', 'www.salesdb.jp']
+ALLOWED_HOSTS = ['salesdb.jp', 'www.salesdb.jp','127.0.0.1']
 
 
 # Application definition

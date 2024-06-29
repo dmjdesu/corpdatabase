@@ -63,6 +63,29 @@ class OriginIndustry(models.Model):
     
     def __str__(self):
         return self.name
+    
+class TagCategory(models.Model):
+    name = models.CharField(max_length=100)
+    # 他のフィールドも必要に応じて追加
+
+    def __str__(self):
+        return self.name
+
+class TagSubcategory(models.Model):
+    category = models.ForeignKey(TagCategory, on_delete=models.CASCADE, related_name='subcategories')
+    name = models.CharField(max_length=100)
+    # 他のフィールドも必要に応じて追加
+
+    def __str__(self):
+        return self.name
+
+class TagSmallcategory(models.Model):
+    subcategory = models.ForeignKey(TagSubcategory, on_delete=models.CASCADE, related_name='smallcategories')
+    name = models.CharField(max_length=100)
+    # 他のフィールドも必要に応じて追加
+
+    def __str__(self):
+        return self.name
 
 
 class Company(models.Model):
@@ -84,6 +107,7 @@ class Company(models.Model):
     state = models.CharField(max_length=100, blank=True, null=True, verbose_name="都道府県")
     country = models.CharField(max_length=100, blank=True, null=True, verbose_name="国")
     postal_code = models.CharField(max_length=20, blank=True, null=True, verbose_name="郵便番号")
+    tags = models.ManyToManyField(TagSmallcategory, blank=True, verbose_name="タグ")
 
     def __str__(self):
         return self.name
@@ -115,12 +139,27 @@ class Note(models.Model):
     def __str__(self):
         return f"Note for {self.company.name} on {self.created_at}"
 
-class Tag(models.Model):
-    """
-    企業にタグを付けるためのモデルです。
-    """
-    name = models.CharField(max_length=50, unique=True, verbose_name="タグ名")
-    companies = models.ManyToManyField(Company, related_name='tags', verbose_name="企業")
+
+class Prefecture(models.Model):
+    code = models.CharField(max_length=6, verbose_name="団体コード")
+    name = models.CharField(max_length=50, verbose_name="都道府県名（漢字）")
+    name_kana = models.CharField(max_length=50, verbose_name="都道府県名（カナ）")
 
     def __str__(self):
-        return self.name
+        return f"{self.name}"
+
+class City(models.Model):
+    prefecture = models.ForeignKey(Prefecture, on_delete=models.CASCADE, related_name='cities', null=True, blank=True, verbose_name="都道府県")
+    code = models.CharField(max_length=6, verbose_name="団体コード")
+    name = models.CharField(max_length=50, verbose_name="市区町村名（漢字）", null=True, blank=True)
+    name_kana = models.CharField(max_length=50, verbose_name="市区町村名（カナ）", null=True, blank=True)
+
+    def __str__(self):
+        if self.city_name:
+            return f"{self.name}"
+        else:
+            return f"{self.prefecture.name} (県全域)"
+
+    class Meta:
+        verbose_name_plural = "cities"
+

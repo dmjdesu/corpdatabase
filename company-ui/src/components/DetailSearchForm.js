@@ -1,13 +1,8 @@
 // src/DetailSearchForm.js
 import React, { useState } from 'react';
 
-const DetailSearchForm = () => {
+const DetailSearchForm = ({ showPopup }) => {
     const [isExpanded, setIsExpanded] = useState(false);
-
-    const showPopup = (type, event) => {
-        // ポップアップ表示ロジック
-        console.log(`${type} popup`);
-    };
 
     const clearInputs = (section) => {
         // 入力クリアロジック
@@ -40,7 +35,7 @@ const DetailSearchForm = () => {
                             <label htmlFor="excludeKeywords">除外するキーワード</label>
                             <textarea id="excludeKeywords" rows="2" placeholder="複数行入力欄"></textarea>
                             <label htmlFor="tags">#タグを選択</label>
-                            <input type="text" id="tags" onClick={(e) => showPopup('tag', e)} readOnly />
+                            <input type="text" id="tags" onClick={(e) => showPopup('tag')} readOnly />
                         </div>
                         {/* 他の詳細検索項目 */}
                         <h3 className="performance-section">
