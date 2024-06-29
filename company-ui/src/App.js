@@ -124,7 +124,7 @@ const IndustryPopup = ({ onClose, applySelections }) => {
   const handleOriginCategoryChange = (categoryId) => {
     setSelectedOriginCategory(categoryId);
     // オリジナルサブカテゴリデータの取得
-    axios.get('/api/industries/', { params: { category_id: categoryId } })
+    axios.get('/api/origin_industries/', { params: { category_id: categoryId } })
       .then(response => setOriginSubcategories(response.data))
       .catch(error => console.error('Error fetching subcategories:', error));
   };
@@ -171,7 +171,7 @@ const IndustryPopup = ({ onClose, applySelections }) => {
                   {originCategories.map(category => (
                     <li key={category.id}>
                       <input type="checkbox" id={`category${category.id}`} onChange={() => handleOriginCategoryChange(category.id)} />
-                      <label htmlFor={`category${category.id}`}>{category.code}.{category.name}</label>
+                      <label htmlFor={`category${category.id}`}>{category.name}</label>
                       <span className="count-box">1,234</span>
                     </li>
                   ))}
@@ -183,7 +183,7 @@ const IndustryPopup = ({ onClose, applySelections }) => {
                   {originSubcategories.map(subcategory => (
                     <li key={subcategory.id}>
                       <input type="checkbox" id={`subcategory${subcategory.id}`} onChange={() => console.log(subcategory.id)} />
-                      <label htmlFor={`subcategory${subcategory.id}`}>{subcategory.code}.{subcategory.name}</label>
+                      <label htmlFor={`subcategory${subcategory.id}`}>{subcategory.name}</label>
                       <span className="count-box">567</span>
                     </li>
                   ))}
