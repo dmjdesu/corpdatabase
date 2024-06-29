@@ -39,10 +39,10 @@ class Command(BaseCommand):
 
                     city, city_created = City.objects.get_or_create(
                         prefecture=prefecture,
-                        city_code=city_code,
+                        code=city_code,
                         defaults={
-                            'city_name': city_name,
-                            'city_name_kana': city_name_kana,
+                            'name': city_name,
+                            'name_kana': city_name_kana,
                         }
                     )
 
@@ -54,10 +54,10 @@ class Command(BaseCommand):
                 else:
                     # 都道府県を作成または取得
                     prefecture, prefecture_created = Prefecture.objects.get_or_create(
-                        prefecture_code=prefecture_code,
+                        code=prefecture_code,
                         defaults={
-                            'prefecture_name': prefecture_name,
-                            'prefecture_name_kana': prefecture_name_kana,
+                            'name': prefecture_name,
+                            'name_kana': prefecture_name_kana,
                         }
                     )
 
