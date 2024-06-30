@@ -1,16 +1,23 @@
-// src/DetailSearchForm.js
 import React, { useState } from 'react';
 
 const DetailSearchForm = ({ showPopup }) => {
     const [isExpanded, setIsExpanded] = useState(false);
 
     const clearInputs = (section) => {
-        // 入力クリアロジック
+        const sectionElement = document.querySelectorAll(`.${section} input, .${section} textarea`);
+        console.log("sectionElement")
+        console.log(sectionElement)
+        sectionElement.forEach(element => {
+            if (element.type === 'checkbox') {
+                element.checked = false;
+            } else {
+                element.value = '';
+            }
+        });
         console.log(`Clear inputs in ${section}`);
     };
 
     const formatNumber = (input) => {
-        // 数値フォーマットロジック
         const value = input.value.replace(/\D/g, '');
         input.value = value.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
     };
