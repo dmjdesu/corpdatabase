@@ -1,9 +1,9 @@
 from django.contrib import admin
 
 from .models import (City, Company, Contact, Industry, IndustryCategory,
-                     IndustryDetail, IndustrySubcategory, Note, OriginIndustry,
-                     OriginIndustryCategory, Prefecture, TagCategory,
-                     TagSmallcategory, TagSubcategory)
+                     IndustryDetail, IndustrySubcategory, Keyword, Note,
+                     OriginIndustry, OriginIndustryCategory, Prefecture,
+                     TagCategory, TagSmallcategory, TagSubcategory)
 
 
 @admin.register(IndustryCategory)
@@ -106,3 +106,9 @@ class CityAdmin(admin.ModelAdmin):
     list_display = ("code", "name", "name_kana", "prefecture")
     search_fields = ("name", "name_kana")
     list_filter = ("prefecture",)
+
+
+@admin.register(Keyword)
+class KeywordAdmin(admin.ModelAdmin):
+    list_display = "keyword"
+    search_fields = "keyword"
