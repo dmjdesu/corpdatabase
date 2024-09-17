@@ -26,7 +26,7 @@ SECRET_KEY = "django-insecure-vls#70j394lywg7^9knh2sn=1tmv#aj5!rrig12i2bdmw*3l6g
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['salesdb.jp', 'www.salesdb.jp','127.0.0.1']
+ALLOWED_HOSTS = ["salesdb.jp", "www.salesdb.jp", "127.0.0.1"]
 
 
 # Application definition
@@ -40,9 +40,9 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "corp",
     "corpdatabase",
-    'rest_framework',
-    'django_bootstrap5',
-    'django_filters',
+    "rest_framework",
+    "django_bootstrap5",
+    "django_filters",
 ]
 
 MIDDLEWARE = [
@@ -59,15 +59,15 @@ ROOT_URLCONF = "corpdatabase.urls"
 
 TEMPLATES = [
     {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
+        "BACKEND": "django.template.backends.django.DjangoTemplates",
+        "DIRS": [os.path.join(BASE_DIR, "templates")],
+        "APP_DIRS": True,
+        "OPTIONS": {
+            "context_processors": [
+                "django.template.context_processors.debug",
+                "django.template.context_processors.request",
+                "django.contrib.auth.context_processors.auth",
+                "django.contrib.messages.context_processors.messages",
             ],
         },
     },
@@ -120,17 +120,17 @@ USE_TZ = True
 
 # settings.py
 
-STATIC_URL = '/static/'
+STATIC_URL = "/static/"
 STATICFILES_DIRS = [
     BASE_DIR / "staticfiles",
 ]
 
 # Media files (Uploaded files)
-MEDIA_URL = '/media/'
+MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 
 # 必要に応じて以下も追加
-STATIC_ROOT = '/var/www/vhosts/salesdb.jp/httpdocs/static/'
+STATIC_ROOT = "/var/www/vhosts/salesdb.jp/httpdocs/static/"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
@@ -138,47 +138,45 @@ STATIC_ROOT = '/var/www/vhosts/salesdb.jp/httpdocs/static/'
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 REST_FRAMEWORK = {
-    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend']
+    "DEFAULT_FILTER_BACKENDS": ["django_filters.rest_framework.DjangoFilterBackend"]
 }
 # Elasticsearch settings
 ELASTICSEARCH_DSL = {
-    'default': {
-        'hosts': 'http://localhost:9200'
-    },
+    "default": {"hosts": "http://localhost:9200"},
 }
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp.gmail.com"
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'dmjdesu@gmail.com'
-EMAIL_HOST_PASSWORD = 'esyu mefk yduk iudl'
+EMAIL_HOST_USER = "dmjdesu@gmail.com"
+EMAIL_HOST_PASSWORD = "esyu mefk yduk iudl"
 
-CSRF_TRUSTED_ORIGINS = ['https://salesdb.jp', 'https://www.salesdb.jp']
+CSRF_TRUSTED_ORIGINS = ["https://salesdb.jp", "https://www.salesdb.jp"]
 SECURE_SSL_REDIRECT = False
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
 
 # Logging configuration
 LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'handlers': {
-        'file': {
-            'level': 'DEBUG',
-            'class': 'logging.FileHandler',
-            'filename': os.path.join(BASE_DIR, 'logs/django_debug.log'),
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {
+        "file": {
+            "level": "DEBUG",
+            "class": "logging.FileHandler",
+            "filename": os.path.join(BASE_DIR, "logs/django_debug.log"),
         },
-        'console': {
-            'level': 'DEBUG',
-            'class': 'logging.StreamHandler',
+        "console": {
+            "level": "DEBUG",
+            "class": "logging.StreamHandler",
         },
     },
-    'loggers': {
-        'django': {
-            'handlers': ['file', 'console'],
-            'level': 'DEBUG',
-            'propagate': True,
+    "loggers": {
+        "django": {
+            "handlers": ["file", "console"],
+            "level": "DEBUG",
+            "propagate": True,
         },
     },
 }

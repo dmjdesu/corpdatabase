@@ -1,15 +1,24 @@
 import random
+
 from django.core.management.base import BaseCommand
 from faker import Faker
-from corp.models import IndustryCategory, Industry, Company
+
+from corp.models import Company, Industry, IndustryCategory
+
 
 class Command(BaseCommand):
-    help = 'Populate the database with random companies'
+    help = "Populate the database with random companies"
 
     def handle(self, *args, **kwargs):
         fake = Faker()
-        categories = ['Technology', 'Healthcare', 'Finance', 'Education', 'Retail']
-        industries = ['Software', 'Medical Devices', 'Banking', 'Universities', 'E-commerce']
+        categories = ["Technology", "Healthcare", "Finance", "Education", "Retail"]
+        industries = [
+            "Software",
+            "Medical Devices",
+            "Banking",
+            "Universities",
+            "E-commerce",
+        ]
 
         # Create Industry Categories
         for category in categories:
@@ -37,7 +46,11 @@ class Command(BaseCommand):
                 city=fake.city(),
                 state=fake.state(),
                 country=fake.country(),
-                postal_code=fake.postcode()
+                postal_code=fake.postcode(),
             )
 
-        self.stdout.write(self.style.SUCCESS('Successfully populated the database with random companies'))
+        self.stdout.write(
+            self.style.SUCCESS(
+                "Successfully populated the database with random companies"
+            )
+        )
