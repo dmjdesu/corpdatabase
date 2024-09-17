@@ -29,6 +29,8 @@ class Command(BaseCommand):
 
                 match = keyword_pattern.search(business_summary)
                 if match:
-                    keywords = match.group(1).split("、")  # '、'で区切る
+                    # '、' または ',' で区切る
+                    keywords = re.split(r"[、,]", match.group(1))
                     for keyword in keywords:
+                        # キーワードを空白を除去して登録
                         Keyword.objects.create(keyword=keyword.strip())
