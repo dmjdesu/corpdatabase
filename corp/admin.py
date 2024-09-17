@@ -110,5 +110,5 @@ class CityAdmin(admin.ModelAdmin):
 
 @admin.register(Keyword)
 class KeywordAdmin(admin.ModelAdmin):
-    list_display = "keyword"
-    search_fields = "keyword"
+    list_display = ("keyword",)
+    search_fields = ("keyword",)
