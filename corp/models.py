@@ -250,4 +250,4 @@ class Keyword(models.Model):
     keyword = models.CharField(max_length=255)
 
     def __str__(self):
-        return f"{self.company_name} - {self.keyword}"
+        return f"{self.keyword}"
